@@ -1,11 +1,13 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+body {
+  margin: 0;
+  font-family: 'NanumSquare', 'NanumSquareRound', 'Jalnan2';
+  /* -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif; */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,56 +15,61 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
+
+@font-face {
+  font-family: 'Jalnan2';
+  src: url('./assets/fonts/Jalnan2.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'NanumSquare';
+  font-weight: 300;
+  src: url('./assets/fonts/NanumSquareL.woff') format('woff'),
+  url('./assets/fonts/NanumSquareOTF_acL.woff') format('woff')
+}
+
+@font-face {
+  font-family: 'NanumSquare';
   font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+  src: url('./assets/fonts/NanumSquareR.woff') format('woff'),
+  url('./assets/fonts/NanumSquareOTF_acR.woff') format('woff')
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+
+@font-face {
+  font-family: 'NanumSquare';
+  font-weight: 700;
+  src: url('./assets/fonts/NanumSquareB.woff') format('woff'),
+  url('./assets/fonts/NanumSquareOTF_acB.woff') format('woff')
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+@font-face {
+  font-family: 'NanumSquare';
+  font-weight: 800;
+  src: url('./assets/fonts/NanumSquareEB.woff') format('woff'),
+  url('./assets/fonts/NanumSquareOTF_acEB.woff') format('woff')
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+
+@font-face {
+  font-family: 'NanumSquareRound';
+  font-weight: 300;
+  src: url('./assets/fonts/NanumSquareRoundOTFL.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'NanumSquareRound';
   font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
+  src: url('./assets/fonts/NanumSquareRoundOTFR.woff') format('woff');
 }
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+@font-face {
+  font-family: 'NanumSquareRound';
+  font-weight: 700;
+  src: url('./assets/fonts/NanumSquareRoundOTFB.woff') format('woff');
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+@font-face {
+  font-family: 'NanumSquareRound';
+  font-weight: 800;
+  src: url('./assets/fonts/NanumSquareRoundOTFEB.woff') format('woff');
 }
