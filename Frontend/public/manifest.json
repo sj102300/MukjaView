@@ -1,0 +1,47 @@
+{
+    "name": "먹자VIEW",
+    "short_name": "먹자VIEW",
+    "start_url": "",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#ff914c",
+    "description": "Mukjaview",
+    "icons": [
+      {
+        "src": "icons/favicon.ico",
+        "sizes": "32x32 24x24 16x16",
+        "type": "image/x-icon"
+      },
+      {
+        "src": "icons/logo-transparent-16.png",
+        "type": "image/png",
+        "sizes": "16x16"
+      },
+      {
+        "src": "icons/logo-transparent-16.png",
+        "type": "image/png",
+        "sizes": "32x32"
+      },
+      {
+        "src": "icons/logo-transparent-16.png",
+        "type": "image/png",
+        "sizes": "96x96"
+      },
+      {
+        "src": "icons/logo-transparent-196.png",
+        "type": "image/png",
+        "sizes": "196x196"
+      },
+      {
+        "src": "icons/logo-transparent-16.png",
+        "type": "image/png",
+        "sizes": "310x310"
+      },
+      {
+        "src": "icons/logo-transparent-512.png",
+        "type": "image/png",
+        "sizes": "512x512",
+        "purpose": "any maskable"
+      }
+    ]
+  }
