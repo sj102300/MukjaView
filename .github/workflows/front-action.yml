@@ -23,8 +23,8 @@ jobs:
         run: |
           cd Frontend
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/nginx-prod .
-          docker push ${{ secrets.DOCKER_USERNAME }}/nginx-prod
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/nginx-prod:${GITHUB_SHA::7} .
+          docker push ${{ secrets.DOCKER_USERNAME }}/nginx-prod:${GITHUB_SHA::7}
 
       - name: Deploy to prod
         uses: appleboy/ssh-action@master
@@ -35,9 +35,12 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           envs: GITHUB_SHA
           script: |
+            SHORT_SHA=${GITHUB_SHA:0:7}
             cd capstone
             git checkout main
-            sudo docker ps
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/nginx-prod
-            sudo docker-compose up -d --force-recreate nginx
-            sudo docker image prune -f
+            docker ps
+            docker pull ${{ secrets.DOCKER_USERNAME }}/nginx-prod:$SHORT_SHA
+            docker stop nginx
+            docker rm nginx
+            docker run -d --name nginx -p 443:443 -p 80:80 -v ~/nginx_data/conf:/etc/nginx/conf.d -v ~/nginx_data/certs:/etc/nginx/certs ${{ secrets.DOCKER_USERNAME }}/nginx-prod:$SHORT_SHA
+            docker image prune -af
