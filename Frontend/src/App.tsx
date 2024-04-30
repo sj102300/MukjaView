@@ -1,11 +1,12 @@
 import './App.css'
-import Intro from './Intro/Intro'
+import SignUp from './SignUp/SignUp';
+// import Intro from './Intro/Intro'
 
 function App() {
 
   return (
-    <Intro />
+    <SignUp/>
   )
 }
 
-export default App
+export default App;
