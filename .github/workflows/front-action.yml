@@ -42,5 +42,5 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/nginx-prod:$SHORT_SHA
             docker stop nginx
             docker rm nginx
-            docker run -d --name nginx -p --network host -v ~/nginx_data/conf:/etc/nginx/conf.d -v ~/nginx_data/certs:/etc/nginx/certs ${{ secrets.DOCKER_USERNAME }}/nginx-prod:$SHORT_SHA
+            docker run -d --name nginx --network host -v ~/nginx_data/conf:/etc/nginx/conf.d -v ~/nginx_data/certs:/etc/nginx/certs ${{ secrets.DOCKER_USERNAME }}/nginx-prod:$SHORT_SHA
             docker image prune -af
