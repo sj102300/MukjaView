@@ -1,17 +1,38 @@
 
+import { useEffect, useState } from 'react';
 import * as Pages from './pages';
+
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination } from 'swiper/modules';
+
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination'
+
 
 export default function SignUp() {
 
-    return (
-        <div className="flex justify-center items-center">
-            {/* <Pages.FirstPage /> */}
-            {/* <Pages.SecondPage /> */}
-            {/* <Pages.ThirdPage /> */}
-            {/* <Pages.FourthPage /> */}
-            {/* <Pages.FifthPage /> */}
-            {/* <Pages.SixthPage /> */}
-            <Pages.LastPage />
-        </div>
-    )
+  // let data = useState({
+  //   username: ''
+  // })
+  // useEffect(()=>{
+
+  // },[data])
+
+  return (
+    <Swiper
+      pagination={{
+        type: 'progressbar',
+        // progressbarFillClass: "myprogressbar"
+      }}
+      modules={[Pagination, Navigation]}
+      className="flex justify-center items-center"
+    >
+      <SwiperSlide><Pages.FirstPage /></SwiperSlide>
+      <SwiperSlide><Pages.SecondPage /></SwiperSlide>
+      <SwiperSlide><Pages.ThirdPage file={'./icons/logo-transparent.png'} /></SwiperSlide>
+      <SwiperSlide><Pages.FourthPage /></SwiperSlide>
+      <SwiperSlide><Pages.FifthPage /></SwiperSlide>
+    </Swiper>
+  )
 }
