@@ -17,6 +17,15 @@ export default function SignUp() {
   })
 
   useEffect(()=>{
+
+    // const cookies = document.cookie;
+    // if(!cookies){
+    //   window.location.href = "https://mukjaview.kro.kr/oauth2/authorization/google"
+    // }
+    // else{
+    //   console.log(cookies);
+    // }
+    
     console.log('hello');
     fetch("https://mukjaview.kro.kr/api/v1/user/name", {
       method: "GET",
