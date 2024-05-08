@@ -1,5 +1,5 @@
 
-// import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as Pages from './pages';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -12,12 +12,23 @@ import 'swiper/css/pagination'
 
 export default function SignUp() {
 
-  // let data = useState({
-  //   username: ''
-  // })
-  // useEffect(()=>{
+  let data = useState({
+    username: ''
+  })
 
-  // },[data])
+  useEffect(()=>{
+    console.log('hello');
+    fetch("https://mukjaview.kro.kr/api/v1/user/name", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((result)=>{
+      return result.json();
+    }).then((response)=>{
+      console.log(response);
+    });
+  },[])
 
   return (
     <div className="flex items-center justify-center">
