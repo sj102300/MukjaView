@@ -85,15 +85,15 @@ export function FourthPage() {
 
     // https://velog.io/@gnoeyah/react-draggable-DragDrop-%EA%B5%AC%ED%98%84
 
-    const swiper = useSwiper();
-    const goPrev = () => {
-        swiper.slidePrev();
-        swiper.slidePrev();
-    }
+    // const swiper = useSwiper();
+    // const goPrev = () => {
+    //     swiper.slidePrev();
+    //     swiper.slidePrev();
+    // }
 
-    const flaverRef = useRef<HTMLDivElement>(null);
-    const moodRef = useRef<HTMLDivElement>(null);
-    const serviceRef = useRef<HTMLDivElement>(null);
+    // const flaverRef = useRef<HTMLDivElement>(null);
+    // const moodRef = useRef<HTMLDivElement>(null);
+    // const serviceRef = useRef<HTMLDivElement>(null);
 
     return (
         <article className={styles.container}>

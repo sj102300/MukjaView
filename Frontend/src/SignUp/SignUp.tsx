@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react';
+// import { useEffect, useState } from 'react';
 import * as Pages from './pages';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -20,13 +20,13 @@ export default function SignUp() {
   // },[data])
 
   return (
+    <div className="flex items-center justify-center">
     <Swiper
       pagination={{
         type: 'progressbar',
         // progressbarFillClass: "myprogressbar"
       }}
       modules={[Pagination, Navigation]}
-      className="flex justify-center items-center"
     >
       <SwiperSlide><Pages.FirstPage /></SwiperSlide>
       <SwiperSlide><Pages.SecondPage /></SwiperSlide>
@@ -34,5 +34,6 @@ export default function SignUp() {
       <SwiperSlide><Pages.FourthPage /></SwiperSlide>
       <SwiperSlide><Pages.FifthPage /></SwiperSlide>
     </Swiper>
+    </div>
   )
 }
