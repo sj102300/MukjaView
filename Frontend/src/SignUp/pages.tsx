@@ -2,7 +2,9 @@
 import styles from './pages.module.css';
 import PrevNext from '../components/PrevNext';
 import { useSwiper } from 'swiper/react';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
+
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 // type userProps{
 //     user: string,
@@ -11,16 +13,15 @@ import { useRef } from 'react';
 
 export function FirstPage() {
 
-
     const swiper = useSwiper();
 
     let nameRef = useRef<HTMLInputElement>(null);
 
     const goNext = () => {
-        if (nameRef.current?.value === ''){
+        if (nameRef.current?.value === "") {
             nameRef.current?.focus();
         }
-        else{
+        else {
             console.log(nameRef.current?.value);
             swiper.slideNext();
         }
@@ -29,8 +30,8 @@ export function FirstPage() {
     return (
         <article className={styles.container}>
             <h3 className="text-2xl font-bold">닉네임을 입력해주세요.</h3>
-            <input ref={nameRef} type="text" className={styles.nicknameinput} placeholder="닉네임.."/>
-            <PrevNext prev={""} next={"다음"} goNext={goNext}/>
+            <input ref={nameRef} type="text" className={styles.nicknameinput} placeholder="닉네임.." />
+            <PrevNext prev={""} next={"다음"} goNext={goNext} />
         </article>
     )
 }
@@ -69,7 +70,7 @@ export function SecondPage() {
     )
 }
 
-export function ThirdPage({file}: {file: string}) {
+export function ThirdPage({ file }: { file: string }) {
 
     //상태관리 라이브러리 뭐쓸지 정해서 넣으면 됨
 
@@ -77,47 +78,6 @@ export function ThirdPage({file}: {file: string}) {
         <article className={styles.container}>
             <img src={file} alt="셀카 사진" width='200' />
             <PrevNext prev={"재선택"} next={"다음"} />
-        </article>
-    )
-}
-
-export function FourthPage() {
-
-    // https://velog.io/@gnoeyah/react-draggable-DragDrop-%EA%B5%AC%ED%98%84
-
-    // const swiper = useSwiper();
-    // const goPrev = () => {
-    //     swiper.slidePrev();
-    //     swiper.slidePrev();
-    // }
-
-    // const flaverRef = useRef<HTMLDivElement>(null);
-    // const moodRef = useRef<HTMLDivElement>(null);
-    // const serviceRef = useRef<HTMLDivElement>(null);
-
-    return (
-        <article className={styles.container}>
-            <h3 className="text-lg font-bold w-9/10 break-keep">식당을 선택할 때 맛, 분위기, 서비스가 중요한 순서대로 배치해주세요.</h3>
-            <div className={styles.elementList}>
-                <div>맛</div>
-                <div>분위기</div>
-                <div>서비스</div>
-            </div>
-            <div className={styles.orderList}>
-                <div>
-                    <p>1순위</p>
-                    <div className={styles.tempPlace}>맛</div>
-                </div>
-                <div>
-                    <p>2순위</p>
-                    <div className={styles.tempPlace}></div>
-                </div>
-                <div>
-                    <p>3순위</p>
-                    <div className={styles.tempPlace}></div>
-                </div>
-            </div>
-            <PrevNext prev={"이전"} next={"다음"} />
         </article>
     )
 }
@@ -137,6 +97,7 @@ export function FifthPage() {
         </article>
     )
 }
+
 export function SixthPage() {
 
     return (
@@ -160,3 +121,90 @@ export function LastPage() {
     )
 
 }
+
+
+/*
+
+export function FourthPage() {
+
+    // https://velog.io/@gnoeyah/react-draggable-DragDrop-%EA%B5%AC%ED%98%84
+    // https://velog.io/@deli-ght/react-beautiful-dnd-%EC%82%AC%EC%9A%A9-%EB%B0%A9%EB%B2%95
+
+    const swiper = useSwiper();
+
+    const DragDropContextRef = useRef<DragDropContext>(null);
+
+    useEffect(()=>{
+
+    },[])
+
+    const onDragEnd = (result: any) => {
+        const { destination, source, draggableId } = result;
+
+        if (!destination) {
+            return;
+        }
+
+        if (
+            destination.droppableId === source.droppableId &&
+            destination.index === source.index
+        ) {
+            return;
+        }
+
+        // Implement rearrangement logic here
+    };
+
+    return (
+        <article className={styles.container}>
+            <h3 className="text-lg font-bold w-9/10 break-keep">식당을 선택할 때 맛, 분위기, 서비스가 중요한 순서대로 배치해주세요.</h3>
+
+            <DragDropContext ref={DragDropContextRef} onDragEnd={onDragEnd}>
+                <Droppable droppableId="elements" direction="horizontal">
+                    {(provided) => (
+                        <div
+                            ref={provided.innerRef}
+                            {...provided.droppableProps}
+                            className={styles.elementList}
+                        >
+                            {['맛', '분위기', '서비스'].map((item, index) => (
+                                <Draggable key={item} draggableId={item} index={index}>
+                                    {(provided) => (
+                                        <div
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                            {...provided.dragHandleProps}
+                                            className={styles.draggableItem}
+                                        >
+                                            {item}
+                                        </div>
+                                    )}
+                                </Draggable>
+                            ))}
+                            {provided.placeholder}
+                        </div>
+                    )}
+                </Droppable>
+            </DragDropContext>
+            <div className={styles.orderList}>
+
+                <div>
+                    <p>1순위</p>
+                    <div className={styles.tempPlace}>맛</div>
+                </div>
+                <div>
+                    <p>2순위</p>
+                    <div className={styles.tempPlace}></div>
+                </div>
+                <div>
+                    <p>3순위</p>
+                    <div className={styles.tempPlace}></div>
+                </div>
+            </div>
+            <PrevNext prev={"이전"} next={"다음"} />
+        </article>
+    )
+}
+
+
+*/

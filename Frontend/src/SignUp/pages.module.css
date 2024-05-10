@@ -55,10 +55,10 @@
     width:80%;
 }
 
-.elementList>div {
+.elementList>div, .elementListItem {
     background-color: #ff6c1a;
     border-radius: 5px;
-    flex: 1;
+    width: 100%;
     height: 40px;
     display: flex;
     justify-content: center;
