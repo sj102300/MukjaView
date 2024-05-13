@@ -8,7 +8,7 @@ import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination'
-import FourthPage from './Re-FourthPage';
+import FourthPage from './FourthPage';
 
 export default function SignUp() {
 
@@ -44,3 +44,16 @@ export default function SignUp() {
 //   console.log(response);
 // });
 
+
+
+// useEffect(()=>{
+//   fetch('/api/v1/user/name', {
+//     method: "GET",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//   }).then((response) => { console.log(response)})
+//   .then((response)=>{
+//     console.log(response);
+//   })
+// },[])
