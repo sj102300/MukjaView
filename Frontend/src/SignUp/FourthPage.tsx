@@ -22,10 +22,8 @@ export default function FourthPage() {
 
         if (active.id !== over.id) {
             let copy = [...items]
-
             const activeIndex = copy.findIndex(item => item === active.id);
             const overIndex = Number(over.id);
-            // copy[Number(over.id)] = active.id;
 
             if (activeIndex < 0) {
                 let 보기copy = new Set(보기);
