@@ -11,10 +11,10 @@ interface DraggableItemProps {
       id: id,
     });
 
-    const style = transform ? {
-      transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-    } : undefined;
-  
+    const style = {
+      touchAction: 'none', // Add touch-action: none here
+      ...transform ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` } : undefined
+  };
   
     return (
       <div ref={setNodeRef} {...listeners} {...attributes} style={style}>

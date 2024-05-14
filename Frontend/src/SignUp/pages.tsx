@@ -131,12 +131,18 @@ export function SixthPage() {
 
 export function LastPage() {
 
+    let navigator = useNavigate();
+
     return (
         <article className={styles.container}>
             <h3 className="text-2xl m-2 font-bold w-9/10 break-keep">분석 완료!</h3>
             <div className={styles.result}>
-                <div>내 먹BTI 확인하기 &gt;&gt;</div>
-                <div>맛집 찾으러 가기 &gt;&gt;</div>
+                <div onClick={()=>{
+                    navigator('/mypage')
+                }} >내 먹BTI 확인하기 &gt;&gt;</div>
+                <div onClick={()=>{
+                    navigator('/map')
+                }}>맛집 찾으러 가기 &gt;&gt;</div>
             </div>
         </article>
     )
@@ -166,7 +172,7 @@ export function FourthPage() {
             return;
         }
 
-        if (
+        if ( 
             destination.droppableId === source.droppableId &&
             destination.index === source.index
         ) {

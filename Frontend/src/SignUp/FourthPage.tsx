@@ -28,8 +28,14 @@ export default function FourthPage() {
             // copy[Number(over.id)] = active.id;
 
             if (activeIndex < 0) {
-                copy[overIndex] = active.id;
                 let 보기copy = new Set(보기);
+                if (!copy[overIndex]) {
+                    copy[overIndex] = active.id;
+                }
+                else{
+                    보기copy.add(copy[overIndex]);
+                    copy[overIndex] = active.id;
+                }
                 보기copy.delete(active.id);
                 set보기(보기copy);
             }
