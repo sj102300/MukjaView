@@ -1,0 +1,31 @@
+
+.searchBar{
+    border-bottom:1px solid lightgrey;
+    padding:10px;
+    position: sticky;
+    background-color: #ffffff;
+    top:0;
+    left:0;
+}
+
+
+.listItem{
+    display: grid;
+    grid-template-columns: 120px auto 45px;
+    align-items: center;
+    gap:8px;
+    padding:10px;
+    border-bottom:1px solid lightgrey;
+}
+
+.listItem>img{
+    width:120px;
+    height:80px;
+    background-color: rgb(229, 255, 151);
+}
+
+.listItem>div{
+    display: flex;
+    flex-direction: column;
+    gap:8px;
+}
