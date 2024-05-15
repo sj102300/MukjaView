@@ -62,7 +62,7 @@ export default function MyPage() {
         restaurantName: '가츠시',
         address: '서울 광진구 광나루로 418',
     }
-    ])
+    ] || null)
 
 
     return (
