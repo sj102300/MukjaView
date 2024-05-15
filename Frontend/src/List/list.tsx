@@ -4,7 +4,7 @@ import { IoIosArrowForward } from "react-icons/io";
 
 
 import styles from "./list.module.css"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface RestaurantsItemObj{
     thumbnail: string;
@@ -15,33 +15,53 @@ interface RestaurantsItemObj{
 
 export default function List() {
 
-    let [restaurants, setRestaurants] = useState<Array<RestaurantsItemObj>>([{
-        thumbnail: './icons/logo-transparent.png',
-        name: '가츠시',
-        address: '서울 광진구 광나루로 418',
-    },{
-        thumbnail: './icons/logo-transparent.png',
-        name: '가츠시',
-        address: '서울 광진구 광나루로 418',
-    },{
-        thumbnail: './icons/logo-transparent.png',
-        name: '가츠시',
-        address: '서울 광진구 광나루로 418',
-    },{
-        thumbnail: './icons/logo-transparent.png',
-        name: '가츠시',
-        address: '서울 광진구 광나루로 418',
-    },{
-        thumbnail: './icons/logo-transparent.png',
-        name: '가츠시',
-        address: '서울 광진구 광나루로 418',
-    },{
-        thumbnail: './icons/logo-transparent.png',
-        name: '가츠시',
-        address: '서울 광진구 광나루로 418',
-    }
+    let [restaurants, setRestaurants] = useState<Array<RestaurantsItemObj>>([] || null)
 
-])
+    useEffect(()=>{
+        setTimeout(()=>{
+            setRestaurants([{
+                thumbnail: './icons/logo-transparent.png',
+                name: '가츠시',
+                address: '서울 광진구 광나루로 418',
+            },{
+                thumbnail: './icons/logo-transparent.png',
+                name: '가츠시',
+                address: '서울 광진구 광나루로 418',
+            },{
+                thumbnail: './icons/logo-transparent.png',
+                name: '가츠시',
+                address: '서울 광진구 광나루로 418',
+            },{
+                thumbnail: './icons/logo-transparent.png',
+                name: '가츠시',
+                address: '서울 광진구 광나루로 418',
+            },{
+                thumbnail: './icons/logo-transparent.png',
+                name: '가츠시',
+                address: '서울 광진구 광나루로 418',
+            },{
+                thumbnail: './icons/logo-transparent.png',
+                name: '가츠시',
+                address: '서울 광진구 광나루로 418',
+            },{
+                thumbnail: './icons/logo-transparent.png',
+                name: '가츠시',
+                address: '서울 광진구 광나루로 418',
+            },{
+                thumbnail: './icons/logo-transparent.png',
+                name: '가츠시',
+                address: '서울 광진구 광나루로 418',
+            },{
+                thumbnail: './icons/logo-transparent.png',
+                name: '가츠시',
+                address: '서울 광진구 광나루로 418',
+            },{
+                thumbnail: './icons/logo-transparent.png',
+                name: '가츠시',
+                address: '서울 광진구 광나루로 418',
+            },])
+        },3000)
+    },[])
 
     return (
         <>
