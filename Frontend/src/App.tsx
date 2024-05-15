@@ -7,6 +7,8 @@ import MyPage from './Mypage/mypage';
 import List from './List/list';
 import Map from './Map/Map';
 import { NavermapsProvider } from 'react-naver-maps';
+import { Suspense } from 'react';
+import Loading from './components/Loading';
 
 function App() {
 
@@ -20,10 +22,13 @@ function App() {
       <Route path={"/mypage"} element={<MyPage />} />
 
       <Route path={"/list"} element={<List />} />
+      
       <Route path={"/map"} element={
-        <NavermapsProvider ncpClientId={import.meta.env.VITE_NAVER_MAP_CLIENT_KEY}>
-          <Map />
-        </NavermapsProvider>
+        <Suspense fallback={<Loading />}>
+          <NavermapsProvider ncpClientId={import.meta.env.VITE_NAVER_MAP_CLIENT_KEY}>
+            <Map />
+          </NavermapsProvider>
+        </Suspense>
       } />
 
     </Routes>

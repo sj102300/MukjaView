@@ -1,9 +1,11 @@
+import { Suspense } from "react";
 import NavBar from "../components/NavBar";
 import Search from "../components/Search";
 import styles from "./map.module.css"
 
 
 import { Container as MapDiv, NaverMap, Marker, useNavermaps } from 'react-naver-maps'
+import Loading from "../components/Loading";
 
 export default function Map() {
 
@@ -14,6 +16,7 @@ export default function Map() {
         <>
             <div className={styles.mapContainer}>
                 <div className={styles.searchBar}><Search /></div>
+
                 <MapDiv
                     style={{
                         width: '100%',
@@ -28,7 +31,6 @@ export default function Map() {
                         />
                     </NaverMap>
                 </MapDiv>
-
             </div>
             <NavBar />
         </>

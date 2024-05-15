@@ -78,10 +78,10 @@ export default function MyPage() {
             <div className={styles.wishlist}>
                 <h2>위시리스트</h2>
                 {
-                    wishItems.map((item, i) => {
+                    wishItems?.map((item, i) => {
 
                         return (
-                            <div className={styles.wishItem}>
+                            <div key={i} className={styles.wishItem}>
                                 <img src={item.thumbnail} alt="썸네일 이미지" />
                                 <div>
                                     <h2 className="text-lg">{item.restaurantName}</h2>

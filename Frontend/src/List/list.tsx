@@ -48,10 +48,10 @@ export default function List() {
             <div className={styles.searchBar}><Search /></div>
             <div className="mb-[58px]">
             {
-                    restaurants.map((item, i) => {
+                    restaurants?.map((item, i) => {
 
                         return (
-                            <div className={styles.listItem}>
+                            <div key={i} className={styles.listItem}>
                                 <img src={item.thumbnail} alt="썸네일 이미지" />
                                 <div>
                                     <h2 className="text-lg">{item.name}</h2>
