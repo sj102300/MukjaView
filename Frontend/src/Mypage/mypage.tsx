@@ -93,7 +93,7 @@ export default function MyPage() {
                                     <h2 className="text-lg">{item.restaurantName}</h2>
                                     <h3 className="text-sm">{item.address}</h3>
                                 </div>
-                                < IoArrowRedoOutline color="ff6c1a" size={"45"} />
+                                <IoArrowRedoOutline color="ff6c1a" size={"45"} />
                             </div>
                         )
                     })
