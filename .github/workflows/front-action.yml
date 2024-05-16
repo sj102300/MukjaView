@@ -22,7 +22,9 @@ jobs:
       - name: Docker Build & push to prod
         run: |
           cd Frontend
-          echo ${{ secrets.REACT.ENV }} > .env
+          echo ${{ secrets.VITE_API_URL }} >> .env
+          echo ${{ secrets.VITE_APP_NAME }} >> .env
+          echo ${{ secrets.VITE_NAVER_MAP_CLIENT_KEY }} >> .env
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -t ${{ secrets.DOCKER_USERNAME }}/nginx-prod:${GITHUB_SHA::7} .
           docker push ${{ secrets.DOCKER_USERNAME }}/nginx-prod:${GITHUB_SHA::7}
