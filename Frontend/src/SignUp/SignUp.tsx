@@ -5,7 +5,7 @@ import * as Pages from './pages';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
 
-import 'swiper/css';
+import './swiper.css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination'
 import FourthPage from './FourthPage';
@@ -17,10 +17,8 @@ export default function SignUp() {
       allowTouchMove={false}
       pagination={{
         type: 'progressbar',
-        // progressbarFillClass: "myprogressbar"
       }}
       modules={[Pagination, Navigation]}
-      className="flex items-center justify-center"
     >
       <SwiperSlide><Pages.FirstPage /></SwiperSlide>
       <SwiperSlide><Pages.SecondPage /></SwiperSlide>

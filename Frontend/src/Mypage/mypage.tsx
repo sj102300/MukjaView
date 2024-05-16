@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import styles from "./mypage.module.css"
 import { IoArrowRedoOutline } from "react-icons/io5";
@@ -12,57 +12,63 @@ interface wishlistItemObj {
 
 export default function MyPage() {
 
-    let [wishItems, setWishItems] = useState<Array<wishlistItemObj>>([{
-        thumbnail: './icons/logo-transparent.png',
-        restaurantName: '가츠시',
-        address: '서울 광진구 광나루로 418',
-    },
-    {
-        thumbnail: './icons/logo-transparent.png',
-        restaurantName: '가츠시',
-        address: '서울 광진구 광나루로 418',
-    },
-    {
-        thumbnail: './icons/logo-transparent.png',
-        restaurantName: '가츠시',
-        address: '서울 광진구 광나루로 418',
-    },
-    {
-        thumbnail: './icons/logo-transparent.png',
-        restaurantName: '가츠시',
-        address: '서울 광진구 광나루로 418',
-    },
-    {
-        thumbnail: './icons/logo-transparent.png',
-        restaurantName: '가츠시',
-        address: '서울 광진구 광나루로 418',
-    },
-    {
-        thumbnail: './icons/logo-transparent.png',
-        restaurantName: '가츠시',
-        address: '서울 광진구 광나루로 418',
-    },
-    {
-        thumbnail: './icons/logo-transparent.png',
-        restaurantName: '가츠시',
-        address: '서울 광진구 광나루로 418',
-    },
-    {
-        thumbnail: './icons/logo-transparent.png',
-        restaurantName: '가츠시',
-        address: '서울 광진구 광나루로 418',
-    },
-    {
-        thumbnail: './icons/logo-transparent.png',
-        restaurantName: '가츠시',
-        address: '서울 광진구 광나루로 418',
-    },
-    {
-        thumbnail: './icons/logo-transparent.png',
-        restaurantName: '가츠시',
-        address: '서울 광진구 광나루로 418',
-    }
-    ] || null)
+    let [wishItems, setWishItems] = useState<Array<wishlistItemObj>>([] || null)
+
+    useEffect(()=>{
+        setTimeout(()=>{
+            setWishItems([{
+                thumbnail: './icons/logo-transparent.png',
+                restaurantName: '가츠시',
+                address: '서울 광진구 광나루로 418',
+            },
+            {
+                thumbnail: './icons/logo-transparent.png',
+                restaurantName: '가츠시',
+                address: '서울 광진구 광나루로 418',
+            },
+            {
+                thumbnail: './icons/logo-transparent.png',
+                restaurantName: '가츠시',
+                address: '서울 광진구 광나루로 418',
+            },
+            {
+                thumbnail: './icons/logo-transparent.png',
+                restaurantName: '가츠시',
+                address: '서울 광진구 광나루로 418',
+            },
+            {
+                thumbnail: './icons/logo-transparent.png',
+                restaurantName: '가츠시',
+                address: '서울 광진구 광나루로 418',
+            },
+            {
+                thumbnail: './icons/logo-transparent.png',
+                restaurantName: '가츠시',
+                address: '서울 광진구 광나루로 418',
+            },
+            {
+                thumbnail: './icons/logo-transparent.png',
+                restaurantName: '가츠시',
+                address: '서울 광진구 광나루로 418',
+            },
+            {
+                thumbnail: './icons/logo-transparent.png',
+                restaurantName: '가츠시',
+                address: '서울 광진구 광나루로 418',
+            },
+            {
+                thumbnail: './icons/logo-transparent.png',
+                restaurantName: '가츠시',
+                address: '서울 광진구 광나루로 418',
+            },
+            {
+                thumbnail: './icons/logo-transparent.png',
+                restaurantName: '가츠시',
+                address: '서울 광진구 광나루로 418',
+            }
+            ])
+        },1500)
+    },[])
 
 
     return (
