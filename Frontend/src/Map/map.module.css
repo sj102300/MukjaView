@@ -1,0 +1,16 @@
+
+.mapContainer{
+    width: 100%;
+    height: calc(100dvh - 58px);
+}
+
+.searchBar{
+    width: 95%;
+    border-radius: 25px;
+    background-color: #ffffff;
+    position: absolute;
+    top:10px;
+    left:2.5%;
+    z-index: 100;
+    padding: 10px;
+}
