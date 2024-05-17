@@ -25,6 +25,7 @@ jobs:
           echo "VITE_API_URL=$VITE_API_URL" >> .env
           echo "VITE_API_URL=$VITE_APP_NAME" >> .env
           echo "VITE_NAVER_MAP_CLIENT_KEY=$VITE_NAVER_MAP_CLIENT_KEY" >> .env
+          cat .env
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -t ${{ secrets.DOCKER_USERNAME }}/nginx-prod:${GITHUB_SHA::7} .
           docker push ${{ secrets.DOCKER_USERNAME }}/nginx-prod:${GITHUB_SHA::7}
