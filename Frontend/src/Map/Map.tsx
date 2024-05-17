@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import NavBar from "../components/NavBar";
 import Search from "../components/Search";
 import styles from "./map.module.css"
@@ -11,6 +11,11 @@ export default function Map() {
 
 
     const navermaps = useNavermaps()
+    useEffect(() => {
+        setTimeout(() => {
+            console.log(navermaps)
+        }, 2000)
+    }, [])
 
     return (
         <>
