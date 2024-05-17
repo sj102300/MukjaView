@@ -12,6 +12,21 @@ import FourthPage from './FourthPage';
 
 export default function SignUp() {
 
+  useEffect(() => {
+    console.log('hello');
+    fetch("http://mukjaview.kro.kr:8081/api/v1/user/name", {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((result) => {
+      return result.json();
+    }).then((response) => {
+      console.log(response);
+    });
+  }, [])
+
   return (
     <Swiper
       allowTouchMove={false}
@@ -30,17 +45,6 @@ export default function SignUp() {
 }
 
 
-// console.log('hello');
-// fetch("https://mukjaview.kro.kr/api/v1/user/name", {
-//   method: "GET",
-//   headers: {
-//     "Content-Type": "application/json",
-//   },
-// }).then((result)=>{
-//   return result.json();
-// }).then((response)=>{
-//   console.log(response);
-// });
 
 
 
@@ -55,3 +59,7 @@ export default function SignUp() {
 //     console.log(response);
 //   })
 // },[])
+
+
+
+// let testURL = "http://mukjaview.kro.kr:8081/api/v1/user/name"
