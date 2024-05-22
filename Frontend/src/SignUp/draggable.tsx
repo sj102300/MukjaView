@@ -3,6 +3,7 @@ import { useDraggable } from '@dnd-kit/core';
 
 interface DraggableItemProps {
     id: string;
+    // handleClick: ()=> {};
     children: React.ReactNode
   }
   

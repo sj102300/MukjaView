@@ -51,6 +51,9 @@ export default function FourthPage() {
     }, [보기])
 
 
+    // const handleClick = ()=>{
+    //     let copy = [...items]
+    // }
 
     return (
 

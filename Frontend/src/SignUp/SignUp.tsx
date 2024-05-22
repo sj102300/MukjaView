@@ -12,20 +12,7 @@ import FourthPage from './FourthPage';
 
 export default function SignUp() {
 
-  useEffect(() => {
-    console.log('hello');
-    fetch("http://mukjaview.kro.kr:8081/api/v1/user/name", {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).then((result) => {
-      return result.json();
-    }).then((response) => {
-      console.log(response);
-    });
-  }, [])
+
 
   return (
     <Swiper
@@ -63,3 +50,19 @@ export default function SignUp() {
 
 
 // let testURL = "http://mukjaview.kro.kr:8081/api/v1/user/name"
+
+
+// useEffect(() => {
+//   console.log('hello');
+//   fetch("http://mukjaview.kro.kr:8081/api/v1/user/name", {
+//     method: "GET",
+//     credentials: "include",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//   }).then((result) => {
+//     return result.json();
+//   }).then((response) => {
+//     console.log(response);
+//   });
+// }, [])
