@@ -5,21 +5,25 @@ import { useSwiper } from 'swiper/react';
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Oval } from 'react-loader-spinner';
+import { UserInfo } from './SignUp';
 
+interface FirstPageProps{
+    setNickname: (nickname: string) => void;
+}
 
-export function FirstPage() {
+export function FirstPage({ setNickname }: FirstPageProps) {
 
     const swiper = useSwiper();
-
     let nameRef = useRef<HTMLInputElement>(null);
 
     const goNext = () => {
-        if (nameRef.current?.value === "") {
+        console.log(nameRef.current?.value);
+        if (!nameRef.current?.value) {
             nameRef.current?.focus();
         }
         else {
-            console.log(nameRef.current?.value);
             swiper.slideNext();
+            setNickname(nameRef.current?.value || '');
         }
     }
 
@@ -78,12 +82,23 @@ export function ThirdPage({ file }: { file: string }) {
     )
 }
 
-export function FifthPage() {
+interface FifthPageProps{
+    setIsResonable: (isResonable: boolean)=>void;
+    setStep: (step: number)=>void
+}
+
+export function FifthPage({ setIsResonable, setStep }: FifthPageProps) {
 
     let navigator = useNavigate()
 
-    const submitSignUp = () => {
-        navigator('/signup/loading');
+    const submitSignUp = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        const target = e.target as HTMLDivElement;
+        if (target.id === 'R') {
+            setIsResonable(true);
+        } else if (target.id === 'F') {
+            setIsResonable(false);
+        }
+        setStep(2);
     }
 
 
@@ -92,23 +107,29 @@ export function FifthPage() {
             <h3 className="text-2xl m-2 font-bold w-9/10 break-keep">마지막입니다!</h3>
             <h3 className="text-2xl m-2 font-bold w-9/10 break-keep">나는</h3>
             <div className={styles.binaryInput}>
-                <div onClick={submitSignUp}>비싸더라도 좋은 품질의 음식과 서비스를 원한다.</div>
+                <div id="R" onClick={submitSignUp}>비싸더라도 좋은 품질의 음식과 서비스를 원한다.</div>
                 <p className="text-3xl m-auto">vs</p>
-                <div onClick={submitSignUp}>합리적인 가격의 음식과 서비스를 원한다.</div>
+                <div id="F" onClick={submitSignUp}>합리적인 가격의 음식과 서비스를 원한다.</div>
             </div>
             <PrevNext prev={"이전"} next={""} />
         </article>
     )
 }
 
-export function SixthPage() {
+interface SixthPageProps{
+    userInfo: UserInfo;
+    setStep: (step: number)=>void
+}
+
+export function SixthPage({ userInfo, setStep }: SixthPageProps) {
 
     let navigator = useNavigate()
 
     useEffect(() => {
         //fetch여기서 보내고 fetch응답 올때까지 만 이거보여주면됨
+        // fetch('')
         setTimeout(() => {
-            navigator('/signup/end')
+            setStep(3);
         }, 1500)
     }, [])
 
@@ -148,90 +169,3 @@ export function LastPage() {
     )
 
 }
-
-
-/*
-
-export function FourthPage() {
-
-    // https://velog.io/@gnoeyah/react-draggable-DragDrop-%EA%B5%AC%ED%98%84
-    // https://velog.io/@deli-ght/react-beautiful-dnd-%EC%82%AC%EC%9A%A9-%EB%B0%A9%EB%B2%95
-
-    const swiper = useSwiper();
-
-    const DragDropContextRef = useRef<DragDropContext>(null);
-
-    useEffect(()=>{
-
-    },[])
-
-    const onDragEnd = (result: any) => {
-        const { destination, source, draggableId } = result;
-
-        if (!destination) {
-            return;
-        }
-
-        if ( 
-            destination.droppableId === source.droppableId &&
-            destination.index === source.index
-        ) {
-            return;
-        }
-
-        // Implement rearrangement logic here
-    };
-
-    return (
-        <article className={styles.container}>
-            <h3 className="text-lg font-bold w-9/10 break-keep">식당을 선택할 때 맛, 분위기, 서비스가 중요한 순서대로 배치해주세요.</h3>
-
-            <DragDropContext ref={DragDropContextRef} onDragEnd={onDragEnd}>
-                <Droppable droppableId="elements" direction="horizontal">
-                    {(provided) => (
-                        <div
-                            ref={provided.innerRef}
-                            {...provided.droppableProps}
-                            className={styles.elementList}
-                        >
-                            {['맛', '분위기', '서비스'].map((item, index) => (
-                                <Draggable key={item} draggableId={item} index={index}>
-                                    {(provided) => (
-                                        <div
-                                            ref={provided.innerRef}
-                                            {...provided.draggableProps}
-                                            {...provided.dragHandleProps}
-                                            className={styles.draggableItem}
-                                        >
-                                            {item}
-                                        </div>
-                                    )}
-                                </Draggable>
-                            ))}
-                            {provided.placeholder}
-                        </div>
-                    )}
-                </Droppable>
-            </DragDropContext>
-            <div className={styles.orderList}>
-
-                <div>
-                    <p>1순위</p>
-                    <div className={styles.tempPlace}>맛</div>
-                </div>
-                <div>
-                    <p>2순위</p>
-                    <div className={styles.tempPlace}></div>
-                </div>
-                <div>
-                    <p>3순위</p>
-                    <div className={styles.tempPlace}></div>
-                </div>
-            </div>
-            <PrevNext prev={"이전"} next={"다음"} />
-        </article>
-    )
-}
-
-
-*/

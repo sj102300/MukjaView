@@ -5,15 +5,17 @@ import { DraggableItem } from './draggable';
 import { DroppableItem } from './droppable';
 import { useEffect, useState } from 'react';
 import PrevNext from '../components/PrevNext';
+import { useSwiper } from 'swiper/react';
 
-//https://codesandbox.io/p/sandbox/github/jonsaimon/dndkit-fill-in-the-blanks/tree/main/?file=%2Fsrc%2FApp.js%3A25%2C11
+interface FourthPageProps{
+    setMBTIOrder: (MBTIOrder: string)=>void;
+}
 
-//https://stackoverflow.com/questions/66996614/drag-and-drop-library-dnd-kit-not-working-in-my-react-example
+export default function FourthPage({ setMBTIOrder }: FourthPageProps) {
 
-export default function FourthPage() {
+    const swiper = useSwiper();
 
     let [canNext, setCanNext] = useState<boolean>(false)
-
     let [보기, set보기] = useState<Set<string>>(new Set(['맛', '분위기', '서비스']))
     let [items, setItems] = useState<Array<string>>(['', '', '']);
 
@@ -46,14 +48,20 @@ export default function FourthPage() {
         }
     };
 
+    const goNext = ()=>{
+        let MBTIOrder = items.map((e)=> {
+            if (e === '맛') { return 'F' }
+            else if( e === '서비스' ) { return 'S'}
+            else if( e === '분위기') { return 'M' }
+        }).join('');
+        setMBTIOrder(MBTIOrder)
+        console.log(MBTIOrder);
+        swiper.slideNext();
+    }
+
     useEffect(() => {
         보기.size === 0 ? setCanNext(true) : null;
     }, [보기])
-
-
-    // const handleClick = ()=>{
-    //     let copy = [...items]
-    // }
 
     return (
 
@@ -87,7 +95,7 @@ export default function FourthPage() {
 
                 </div>
             </DndContext>
-            <PrevNext prev={"이전"} next={canNext ? '다음' : ''} />
+            <PrevNext goNext={goNext} prev={"이전"} next={canNext ? '다음' : ''} />
         </article>
     )
 }

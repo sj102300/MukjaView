@@ -1,14 +1,15 @@
 import { Route, Routes } from 'react-router-dom';
 import './App.css'
-import SignUp from './SignUp/SignUp';
+import { SignUp } from './SignUp/SignUp';
 import Intro from './Intro/Intro';
-import { LastPage, SixthPage } from './SignUp/pages';
 import MyPage from './Mypage/mypage';
 import List from './List/list';
 import Map from './Map/Map';
 import { NavermapsProvider } from 'react-naver-maps';
 import { Suspense } from 'react';
 import Loading from './components/Loading';
+import Review from './Review/review';
+import UserInitCheck from './SignUp/check';
 
 function App() {
 
@@ -16,8 +17,6 @@ function App() {
     <Routes>
       <Route path={"/"} element={<Intro />} />
       <Route path={"/signup"} element={<SignUp />} />
-      <Route path={"/signup/loading"} element={<SixthPage />} />
-      <Route path={"/signup/end"} element={<LastPage />} />
 
       <Route path={"/mypage"} element={<MyPage />} />
 
@@ -30,7 +29,8 @@ function App() {
           </NavermapsProvider>
         </Suspense>
       } />
-
+      
+      <Route path={"/review"} element={<Review />} />
     </Routes>
   )
 }
