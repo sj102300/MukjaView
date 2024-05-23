@@ -11,7 +11,7 @@ export default function Check({ setStep }: CheckProps){
 
     let navigate = useNavigate();
 
-  //     // Queries
+      // Queries
   // const query = useQuery({ queryKey: ['todos'], queryFn: getTodos })
 
   // // Mutations
@@ -38,7 +38,7 @@ export default function Check({ setStep }: CheckProps){
         navigate('/mypage');
       }
       else{
-        setStep(1)
+        setStep(1);
       }
     })
   }, [])

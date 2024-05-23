@@ -9,7 +9,6 @@ import { NavermapsProvider } from 'react-naver-maps';
 import { Suspense } from 'react';
 import Loading from './components/Loading';
 import Review from './Review/review';
-import UserInitCheck from './SignUp/check';
 
 function App() {
 
