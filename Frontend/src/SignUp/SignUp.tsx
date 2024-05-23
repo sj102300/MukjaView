@@ -11,15 +11,19 @@ import 'swiper/css/pagination'
 import FourthPage from './FourthPage';
 import Check from './check';
 
-export interface UserInfo {
+export interface UserInputInfo {
   identifier: string;
   nickname: string;
   MBTIOrder: string;
   isReasonable: boolean;
+  smileImageUrl?: string;
+  sadImageUrl?: string;
+  neutralImageUrl?: string;
 }
 
 export function SignUp() {
 
+  let [identifier, setIdentifier] = useState<string>('');
   let [nickname, setNickname] = useState<string>('');
   let [MBTIOrder, setMBTIOrder] = useState<string>('');
   let [isResonable, setIsResonable] = useState<boolean>(true);
@@ -28,7 +32,7 @@ export function SignUp() {
 
   switch (step){
     case 0:
-      return <Check setStep={setStep}/>
+      return <Check setStep={setStep} setIdentifier={setIdentifier}/>
     case 1:
       return <Swiper
           allowTouchMove={false}
@@ -44,8 +48,8 @@ export function SignUp() {
           <SwiperSlide><FifthPage setIsResonable={setIsResonable} setStep={setStep} /></SwiperSlide>
         </Swiper>
     case 2:
-      return <SixthPage userInfo={{
-        identifier: 'hello',
+      return <SixthPage userInputInfo={{
+        identifier: identifier,
         nickname: nickname,
         MBTIOrder: MBTIOrder,
         isReasonable: isResonable

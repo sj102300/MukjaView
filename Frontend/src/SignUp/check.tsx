@@ -2,46 +2,47 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Loading from "../components/Loading";
 import { useQuery } from "react-query";
+import { AxiosError } from "axios";
+import { getUserInfo } from "../apis/userInfo";
 
 interface CheckProps {
-  setStep: (step: number)=>void
+  setStep: (step: number)=>void;
+  setIdentifier: (identifier: string)=>void;
 }
 
-export default function Check({ setStep }: CheckProps){
+export interface UserInfo {
+  mukbti?: string;
+  oauthIdentifier: string;
+  email?: string;
+  realname?: string;
+  nickname: string;
+  neutralImageUrl?: string;
+  smileImageUrl?: string;
+  sadImageUrl?: string;
+  init: boolean;
+}
+
+export default function Check({ setStep, setIdentifier }: CheckProps){
 
     let navigate = useNavigate();
 
-      // Queries
-  // const query = useQuery({ queryKey: ['todos'], queryFn: getTodos })
-
-  // // Mutations
-  // const mutation = useMutation({
-  //   mutationFn: postTodo,
-  //   onSuccess: () => {
-  //     // Invalidate and refetch
-  //     queryClient.invalidateQueries({ queryKey: ['todos'] })
-  //   },
-  // })
-
-  useEffect(() => {
-    fetch("https://mukjaview.kro.kr/api/v1/user/info", {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).then((result) => {
-      return result.json();
-    }).then((response) => {
-      console.log(response);
-      if (response.init){
-        navigate('/mypage');
+    const { data, isError, error, isLoading } = useQuery<UserInfo, AxiosError>(
+      "userInfo",
+      getUserInfo,
+      {
+        onSuccess: (userInfo)=>{
+          if (userInfo.init) {
+            navigate('/mypage');
+          } else {
+            setIdentifier(userInfo.oauthIdentifier);
+            setStep(1);
+          }
+        }
       }
-      else{
-        setStep(1);
-      }
-    })
-  }, [])
+    );
 
-    return <Loading />;
+    if (isLoading) return <Loading />
+    if (isError) return <div>Error발생 {error.message}</div>
+
+    return null;
 }

@@ -1,5 +1,5 @@
 
-interface MBTIAttribute {
+export interface MukbtiAttribute {
     name: string;       //SMF-F
     taste: string;      //달콤쌉싸름한 초콜릿 맛
     title: string;      //부드러운 맛의 에스코트형
@@ -8,8 +8,7 @@ interface MBTIAttribute {
     smileImageUrl: string;
 }
 
-
-export const MBTIs : Array<MBTIAttribute>= [
+export const Mukbtis : Array<MukbtiAttribute>= [
     {
         name: "SFM-F",
         taste: "상큼한 딸기 맛",
@@ -97,7 +96,7 @@ export const MBTIs : Array<MBTIAttribute>= [
     },
 ]
 
-export function getMBTIAttribute (name: string){
-    let idx = MBTIs.findIndex(e => e.name === name)
-    return MBTIs[idx];
+export function getMukbtiAttribute (name: string){
+    let idx = Mukbtis.findIndex(e => e.name === name)
+    return Mukbtis[idx];
 }

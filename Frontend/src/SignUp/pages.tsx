@@ -2,10 +2,12 @@
 import styles from './pages.module.css';
 import PrevNext from '../components/PrevNext';
 import { useSwiper } from 'swiper/react';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Oval } from 'react-loader-spinner';
-import { UserInfo } from './SignUp';
+import { UserInputInfo } from './SignUp';
+import { useQuery } from 'react-query';
+import { initUserInfo } from '../apis/userInfo';
 
 interface FirstPageProps{
     setNickname: (nickname: string) => void;
@@ -117,21 +119,28 @@ export function FifthPage({ setIsResonable, setStep }: FifthPageProps) {
 }
 
 interface SixthPageProps{
-    userInfo: UserInfo;
+    userInputInfo: UserInputInfo;
     setStep: (step: number)=>void
 }
 
-export function SixthPage({ userInfo, setStep }: SixthPageProps) {
+export function SixthPage({ userInputInfo, setStep }: SixthPageProps) {
 
     let navigator = useNavigate()
 
-    useEffect(() => {
-        //fetch여기서 보내고 fetch응답 올때까지 만 이거보여주면됨
-        // fetch('')
-        setTimeout(() => {
-            setStep(3);
-        }, 1500)
-    }, [])
+    const onSuccess = ()=>{
+        setStep(3);
+    }
+    
+
+    const { data, isError, error } = useQuery(
+        "userInfo",
+        () => initUserInfo(userInputInfo),
+        {
+          onSuccess: onSuccess,
+        }
+      );
+    
+
 
     return (
         <article className={styles.container}>

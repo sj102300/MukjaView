@@ -2,6 +2,11 @@ import { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import styles from "./mypage.module.css"
 import { IoArrowRedoOutline } from "react-icons/io5";
+import { useQuery } from "react-query";
+import { MukbtiAttribute, getMukbtiAttribute } from "../utils/handleMBTI";
+import { getUserInfo } from "../apis/userInfo";
+import { UserInfo } from "../SignUp/check";
+import Loading from "../components/Loading";
 
 interface wishlistItemObj {
     thumbnail: string;
@@ -11,36 +16,56 @@ interface wishlistItemObj {
 
 export default function MyPage() {
 
+  let [mukbtiAttribute, setMukbtiAttribute] = useState<MukbtiAttribute | null>(null);
+
+ 
+
+    const { data, isLoading } = useQuery(
+        "userInfo",
+        getUserInfo,
+    );
+
+    if (isLoading) return <Loading />
+
+    useEffect(()=>{
+        setMukbtiAttribute(getMukbtiAttribute('MFS-R'));
+    },[data])
+
+
     let [wishItems, setWishItems] = useState<Array<wishlistItemObj>>([] || null)
 
     return (
         <>
-            <div className={styles.profile}>
-                <img src="./icons/logo-transparent.png" alt="프사" width={"100"} />
-                <div>
-                    <p className="text-sm">미식 우선의 분위기 감상가(FSM - F)</p>
-                    <h2 className="text-xl">새콤한 라즈베리 맛</h2>
-                    <h3 className="text-lg">맛도리 헌터</h3>
+            {(data && mukbtiAttribute !== null) && <>
+                <div className={styles.profile}>
+                    <img src="./icons/logo-transparent.png" alt="프사" width={"100"} />
+                    <div>
+                        <p className="text-sm">{mukbtiAttribute.title}({data?.mukbti})</p>
+                        <h2 className="text-xl">{mukbtiAttribute.taste}</h2>
+                        <h3 className="text-lg">{data?.nickname}</h3>
+                    </div>
                 </div>
-            </div>
-            <div className={styles.wishlist}>
-                <h2>위시리스트</h2>
-                {
-                    wishItems?.map((item, i) => {
-
-                        return (
-                            <div key={i} className={styles.wishItem}>
-                                <img src={item.thumbnail} alt="썸네일 이미지" />
-                                <div>
-                                    <h2 className="text-lg">{item.restaurantName}</h2>
-                                    <h3 className="text-sm">{item.address}</h3>
+                <div className={styles.wishlist}>
+                    <h2>위시리스트</h2>
+                    {
+                        wishItems.length ? 
+                        (wishItems?.map((item, i) => {
+                            return (
+                                <div key={i} className={styles.wishItem}>
+                                    <img src={item.thumbnail} alt="썸네일 이미지" />
+                                    <div>
+                                        <h2 className="text-lg">{item.restaurantName}</h2>
+                                        <h3 className="text-sm">{item.address}</h3>
+                                    </div>
+                                    <IoArrowRedoOutline color="ff6c1a" size={"45"} />
                                 </div>
-                                <IoArrowRedoOutline color="ff6c1a" size={"45"} />
-                            </div>
-                        )
-                    })
-                }
-            </div>
+                            )
+                        }))
+                        : <div className="mx-auto my-1 text-gray-500">비어있어요!!</div>
+                    }
+                </div>
+            </>
+            }
             <NavBar />
         </>
 
