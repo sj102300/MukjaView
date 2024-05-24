@@ -1,0 +1,90 @@
+
+
+.container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    gap:5px;
+    width: 100%;
+}
+
+.tags{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:6px;
+}
+
+.tags>div{
+    background-color: #ff6c1a;
+    padding:3px 10px;
+    border-radius: 25px;
+    font-size: small;
+    text-align: center;
+}
+
+.chart{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.chart>div{
+    width:150px;
+    height:150px;
+    background-color: aqua;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding:10px;
+}
+
+.images{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    overflow:scroll;
+    width: 100%;
+    padding:5px 0;
+    gap:5px;
+}
+
+.images>img{
+    width:100px;
+    background-color: aqua;
+}
+
+.reviewTxt{
+
+}
+
+.heart{
+    position: fixed;
+    z-index: 100;
+    top: 12px;
+    right:12px;
+    padding:8px;
+    border-radius: 100px;
+    animation: updown 0.6s linear 0s infinite alternate; margin-top: 0;
+}
+
+
+.comment{
+    position: fixed;
+    z-index: 100;
+    top: 70px;
+    left:12px;
+    padding:10px;
+    border-radius: 100px;
+    animation: updown 0.6s linear 0s infinite alternate; margin-top: 0;
+
+}
+
+@keyframes updown {
+	0% {top: 12px;}
+	100% {top: 17px;}
+}

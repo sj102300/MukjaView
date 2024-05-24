@@ -2,7 +2,7 @@ import { Suspense, useEffect, useState, useRef } from "react";
 import NavBar from "../components/NavBar";
 import Search from "../components/Search";
 import styles from "./map.module.css"
-import { MdMyLocation } from "react-icons/md";
+import { MdMyLocation, MdRefresh } from "react-icons/md";
 import { FaMapPin } from "react-icons/fa6";
 
 
@@ -41,6 +41,10 @@ export default function Map() {
     }
   }
 
+  const refreshRestaurants = ()=>{
+    console.log('식당정보 재요청');
+  }
+
   // 현재 위치 받아오기
   useEffect(() => {
     getMyLocation();
@@ -72,6 +76,7 @@ export default function Map() {
           </NaverMap>
         </MapDiv>
         <div onClick={getMyLocation} className={styles.myLocation}><MdMyLocation size={"30"} color={"grey"} /></div>
+        <div onClick={refreshRestaurants} className={styles.refresh}><MdRefresh size={"30"} color={"grey"} /></div>
       </div>
       <NavBar />
     </>

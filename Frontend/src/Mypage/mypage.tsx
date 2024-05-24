@@ -18,8 +18,6 @@ export default function MyPage() {
 
   let [mukbtiAttribute, setMukbtiAttribute] = useState<MukbtiAttribute | null>(null);
 
- 
-
     const { data, isLoading } = useQuery(
         "userInfo",
         getUserInfo,
@@ -28,9 +26,8 @@ export default function MyPage() {
     if (isLoading) return <Loading />
 
     useEffect(()=>{
-        setMukbtiAttribute(getMukbtiAttribute('MFS-R'));
+        setMukbtiAttribute(getMukbtiAttribute(data?.mukbti));
     },[data])
-
 
     let [wishItems, setWishItems] = useState<Array<wishlistItemObj>>([] || null)
 

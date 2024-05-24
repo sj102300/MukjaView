@@ -25,3 +25,14 @@
     border-radius: 100px;
     border: 1px solid lightgrey;
 }
+
+.refresh{
+    position:absolute;
+    z-index: 100;
+    bottom: 70px;
+    right:12px;
+    background-color: #ffffff;
+    padding:8px;
+    border-radius: 100px;
+    border: 1px solid lightgrey;
+}
