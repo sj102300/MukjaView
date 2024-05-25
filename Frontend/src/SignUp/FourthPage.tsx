@@ -95,7 +95,7 @@ export default function FourthPage({ setMBTIOrder }: FourthPageProps) {
 
                 </div>
             </DndContext>
-            <PrevNext goNext={goNext} prev={"이전"} next={canNext ? '다음' : ''} />
+            <PrevNext goNext={goNext} prev={""} next={canNext ? '다음' : ''} />
         </article>
     )
 }

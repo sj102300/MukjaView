@@ -20,6 +20,7 @@ const PrevNext: React.FC<PrevNextProps> = ({ prev, next, goPrev, goNext }) => {
     return (
         <div className="text-[#ff6c1a] absolute bottom-0 w-full h-[40px] p-1 flex flex-row justify-between items-center text-lg">
             <div onClick={handlePrev} className={"flex flex-row justify-center items-center " + (prev ? "" : "invisible")}>
+            {/* <div onClick={handlePrev} className={"flex flex-row justify-center items-center " + "invisible"}> */}
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
                 </svg>

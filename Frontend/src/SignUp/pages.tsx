@@ -2,14 +2,15 @@
 import styles from './pages.module.css';
 import PrevNext from '../components/PrevNext';
 import { useSwiper } from 'swiper/react';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Oval } from 'react-loader-spinner';
 import { UserInputInfo } from './SignUp';
 import { useQuery } from 'react-query';
 import { initUserInfo } from '../apis/userInfo';
+import axios from 'axios';
 
-interface FirstPageProps{
+interface FirstPageProps {
     setNickname: (nickname: string) => void;
 }
 
@@ -38,7 +39,12 @@ export function FirstPage({ setNickname }: FirstPageProps) {
     )
 }
 
-export function SecondPage() {
+interface SecondPageProps {
+    setSelectedFile: (file: File) => void;
+    setPreviewUrl: (url: string) => void
+}
+
+export function SecondPage({ setSelectedFile, setPreviewUrl }: SecondPageProps) {
 
     const swiper = useSwiper();
 
@@ -53,9 +59,14 @@ export function SecondPage() {
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
-            const file = e.target.files[0];
-            console.log(file);
-            // setSelectedFile(file);
+            let file = e.target.files[0]
+            setSelectedFile(file);
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onloadend = () => {
+                let url = reader.result?.toString() || ''
+                setPreviewUrl(url);
+            };
             swiper.slideNext();
         }
     };
@@ -67,26 +78,48 @@ export function SecondPage() {
             <button className={styles.photoinput} onClick={handleFileOpen}>
                 사진 선택..
             </button>
-            <PrevNext prev={"이전"} next={"건너뛰기"} goNext={goNext} />
+            <PrevNext prev={""} next={"건너뛰기"} goNext={goNext} />
         </article>
     )
 }
 
-export function ThirdPage({ file }: { file: string }) {
+interface ThirdPageProps {
+    selectedFile: File | null;
+    previewUrl: string;
+}
 
-    //상태관리 라이브러리 뭐쓸지 정해서 넣으면 됨
+export function ThirdPage({ selectedFile, previewUrl }: ThirdPageProps) {
+
+    const swiper = useSwiper();
+
+    const createImages = () => {
+        if (selectedFile !== null) {
+          let formData = new FormData();
+          formData.append('image', selectedFile);
+    
+          axios.post('https://mukjaview.kro.kr/api/upload', formData)
+            .then((response) => {
+              console.log(response);
+            })
+        }
+      }
+
+    const goNext = ()=>{
+        swiper.slideNext();
+        createImages();
+    }
 
     return (
         <article className={styles.container}>
-            <img src={file} alt="셀카 사진" width='200' />
-            <PrevNext prev={"재선택"} next={"다음"} />
+            <img src={previewUrl} alt="셀카 사진" width='200' />
+            <PrevNext prev={"재선택"} next={"다음"} goNext={goNext}/>
         </article>
     )
 }
 
-interface FifthPageProps{
-    setIsResonable: (isResonable: boolean)=>void;
-    setStep: (step: number)=>void
+interface FifthPageProps {
+    setIsResonable: (isResonable: boolean) => void;
+    setStep: (step: number) => void
 }
 
 export function FifthPage({ setIsResonable, setStep }: FifthPageProps) {
@@ -118,43 +151,45 @@ export function FifthPage({ setIsResonable, setStep }: FifthPageProps) {
     )
 }
 
-interface SixthPageProps{
+interface SixthPageProps {
     userInputInfo: UserInputInfo;
-    setStep: (step: number)=>void
+    setStep: (step: number) => void
 }
 
 export function SixthPage({ userInputInfo, setStep }: SixthPageProps) {
 
     let navigator = useNavigate()
 
-    const onSuccess = ()=>{
+    const onSuccess = () => {
         setStep(3);
     }
-    
 
     const { data, isError, error } = useQuery(
         "userInfo",
-        () => initUserInfo(userInputInfo),
+        () => {
+            //response왔는지 확인하고 안왔으면 기다리기
+            initUserInfo(userInputInfo)
+        },
         {
-          onSuccess: onSuccess,
+            onSuccess: onSuccess,
         }
-      );
-    
+    );
+
 
 
     return (
         <article className={styles.container}>
             <h3 className="text-3xl m-8 font-bold w-9/10 break-keep">내 먹BTI 분석중..</h3>
-                <Oval
-                    visible={true}
-                    height="300"
-                    width="300"
-                    color="#ff6c1a"
-                    secondaryColor='ff914d'
-                    ariaLabel="oval-loading"
-                    strokeWidth='1'
-                    strokeWidthSecondary='1'
-                />
+            <Oval
+                visible={true}
+                height="300"
+                width="300"
+                color="#ff6c1a"
+                secondaryColor='ff914d'
+                ariaLabel="oval-loading"
+                strokeWidth='1'
+                strokeWidthSecondary='1'
+            />
         </article>
     )
 }
@@ -167,10 +202,10 @@ export function LastPage() {
         <article className={styles.container}>
             <h3 className="text-2xl m-2 font-bold w-9/10 break-keep">분석 완료!</h3>
             <div className={styles.result}>
-                <div onClick={()=>{
+                <div onClick={() => {
                     navigator('/mypage')
                 }} >내 먹BTI 확인하기 &gt;&gt;</div>
-                <div onClick={()=>{
+                <div onClick={() => {
                     navigator('/map')
                 }}>맛집 찾으러 가기 &gt;&gt;</div>
             </div>
