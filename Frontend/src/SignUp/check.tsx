@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Loading from "../components/Loading";
 import { useQuery } from "react-query";
 import { AxiosError } from "axios";
@@ -26,16 +26,19 @@ export default function Check({ setStep, setIdentifier }: CheckProps){
 
     let navigate = useNavigate();
 
+    let [searchParams, setSearchParams] = useSearchParams();
+
     const { data, isError, error, isLoading } = useQuery<UserInfo, AxiosError>(
       "userInfo",
       getUserInfo,
       {
         onSuccess: (userInfo)=>{
-          if (userInfo.init) {
-            navigate('/mypage');
-          } else {
-            setIdentifier(userInfo.oauthIdentifier);
+          setIdentifier(userInfo.oauthIdentifier);
+          if(userInfo.init === false || searchParams.get('edit') === 'true'){
             setStep(1);
+          }
+          else{
+            navigate('/mypage')
           }
         }
       }

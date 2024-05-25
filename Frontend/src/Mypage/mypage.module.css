@@ -5,6 +5,7 @@
     padding: 20px;
     align-items: center;
     gap:6px;
+    position: relative;
 }
 
 .profile>img{

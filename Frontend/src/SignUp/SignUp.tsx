@@ -9,7 +9,10 @@ import './swiper.css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination'
 import FourthPage from './FourthPage';
-import Check from './check';
+import Check, { UserInfo } from './check';
+import { useSearchParams } from 'react-router-dom';
+import { useQuery } from 'react-query';
+import { getUserInfo } from '../apis/userInfo';
 
 export interface UserInputInfo {
   identifier: string;

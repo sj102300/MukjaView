@@ -6,7 +6,7 @@ import { useQuery } from "react-query"
 
 export const getUserInfo = () => {
   return axios.get('https://mukjaview.kro.kr/api/v1/user/info')
-    .then((response) => response.data)
+  .then(response => response.data);
 }
 
 export const initUserInfo = (userInputInfo: UserInputInfo) => {
