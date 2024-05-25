@@ -1,90 +1,155 @@
+.header {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    padding: 15px 20px 10px 20px;
+    height: 150px;
 
-
-.container{
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding: 10px;
-    gap:5px;
-    width: 100%;
+    justify-content: space-between;
+    align-items: flex-start;
 }
-
-.tags{
+.restaurant {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    gap:6px;
+    flex-direction: row;
+    gap: 10px;
+    align-items: flex-start;
 }
 
-.tags>div{
+
+.info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.tags {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 4px;
+}
+
+
+.tags>div {
     background-color: #ff6c1a;
-    padding:3px 10px;
+    padding: 3px 10px;
     border-radius: 25px;
     font-size: small;
     text-align: center;
 }
 
-.chart{
+.icons {
+    width: 100%;
     display: flex;
     flex-direction: row;
+    gap: 5px;
+    justify-content: space-between;
+}
+
+.front {
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    position: absolute;
+    top: 0;
+    left: 0;
+    backface-visibility: hidden;
+
+    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 10px;
+    background-color: white;
+    border-radius: 20px;
 }
 
-.chart>div{
-    width:150px;
-    height:150px;
+.front>div {
+    width: 150px;
+    height: 150px;
     background-color: aqua;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding:10px;
+    padding: 10px;
 }
 
-.images{
+.back {
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    transform: rotateY(180deg);
+    border-radius: 20px;
+    background-color: white;
+    padding:0 10px 10px 10px;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: white;
+    overflow: scroll;
+}
+
+.back::-webkit-scrollbar {
+    display: none;
+}
+
+
+.images {
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    overflow:scroll;
-    width: 100%;
-    padding:5px 0;
-    gap:5px;
+    overflow-x: scroll;
+    gap: 5px;
+    padding:10px;
+
+    position: sticky;
+    top:0;
+    left:0;
+    background-color: white;
 }
 
-.images>img{
-    width:100px;
+.images>img {
+    width: 100px;
     background-color: aqua;
 }
 
-.reviewTxt{
-
+.down {
+    margin-top: 150px;
+    margin-bottom: 58px;
+    z-index: 3;
+    width: 100%;
+    height: calc(100dvh - 208px);
+    padding: 10px 20px;
+    perspective: 1000px;
 }
 
-.heart{
-    position: fixed;
-    z-index: 100;
-    top: 12px;
-    right:12px;
-    padding:8px;
-    border-radius: 100px;
-    animation: updown 0.6s linear 0s infinite alternate; margin-top: 0;
+.card {
+    width: 100%;
+    position: relative;
+    height: 100%;
+    border-radius: 20px;
+    box-shadow: 0 0 5px gray;
+
+    transition: all 0.5s;
+    perspective-origin: center;
+    transform-style: preserve-3d;
 }
 
+.cardFlip {
+    width: 100%;
+    position: relative;
+    height: 100%;
+    border-radius: 20px;
+    box-shadow: 0 0 5px gray;
 
-.comment{
-    position: fixed;
-    z-index: 100;
-    top: 70px;
-    left:12px;
-    padding:10px;
-    border-radius: 100px;
-    animation: updown 0.6s linear 0s infinite alternate; margin-top: 0;
-
-}
-
-@keyframes updown {
-	0% {top: 12px;}
-	100% {top: 17px;}
+    transition: all 0.5s;
+    perspective-origin: center;
+    transform-style: preserve-3d;
+    transform: rotateY(-180deg);
 }

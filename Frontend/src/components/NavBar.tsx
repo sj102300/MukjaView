@@ -14,7 +14,7 @@ export default function NavBar() {
     let iconBox = "flex flex-col items-center";
 
     return (
-        <nav className="w-full flex flex-row justify-around fixed left-0 bottom-0 p-[6px] items-center bg-white">
+        <nav className="w-[100%] flex flex-row justify-around fixed left-0 bottom-0 p-[6px] items-center bg-white">
              <div onClick={() => { navigator('/list'); }} className={iconBox}>
                 <IoList color="ff6c1a" size={"30"} />
                 <p className="text-xs text-gray-700">목록 보기</p>
