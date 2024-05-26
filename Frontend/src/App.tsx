@@ -10,8 +10,6 @@ import { Suspense } from 'react';
 import Loading from './components/Loading';
 import Review from './Review/review';
 import { ReactQueryDevtools } from 'react-query/devtools'
-import { useQuery } from 'react-query';
-import { getUserInfo } from './apis/userInfo';
 
 
 function App() {
@@ -34,7 +32,7 @@ function App() {
           </Suspense>
         } />
 
-        <Route path={"/review"} element={<Review />} />
+        <Route path={"/review/:id"} element={<Review />} />
       </Routes>
       <ReactQueryDevtools />
     </>
