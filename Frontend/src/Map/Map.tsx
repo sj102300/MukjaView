@@ -8,14 +8,42 @@ import { FaMapPin } from "react-icons/fa6";
 
 import { Container as MapDiv, NaverMap, useNavermaps, InfoWindow, Marker } from 'react-naver-maps';
 import { renderToString } from "react-dom/server";
-import { PreviewRestaurant, PreviewRestaurantProps } from "../components/previewRestaurant";
-import { Link, useNavigate } from "react-router-dom";
+import { PreviewRestaurant } from "../components/previewRestaurant";
+import { useNavigate } from "react-router-dom";
+import { useQuery } from "react-query";
+import { getRestaurantsInfo } from "../apis/restaurantsInfo";
+import { UserInfo } from "../SignUp/check";
+import { getUserInfo } from "../apis/userInfo";
+import { MukbtiAttribute, getMukbtiAttribute } from "../utils/handleMBTI";
 
 
 interface LocationType {
   isAvailable?: boolean;
   latitude: number;
   longitude: number;
+}
+
+interface RestaurantsInfo {
+  restaurantId: number;
+  restaurantName: string;
+  tags: Array<string>;
+  address: string;
+  latitude: number;
+  longitude: number;
+  thumbnailPictureUrl: string;
+  emotion?: string;
+}
+
+export interface PreviewRestaurantInfo {
+  isAvailable: boolean;
+  latitude: number;
+  longitude: number;
+  restaurantId: number,
+  restaurantName: string;
+  tags: Array<string>;
+  address: string;
+  thumbnailPictureUrl: string;
+  emotion: string;
 }
 
 export default function Map() {
@@ -31,10 +59,16 @@ export default function Map() {
     longitude: 127.0738487
   } || null);
 
-  let [previewRestaurant, setPreviewRestaurant] = useState<LocationType>({
+  let [previewRestaurant, setPreviewRestaurant] = useState<PreviewRestaurantInfo>({
     isAvailable: false,
-    latitude: 37.5509199,
-    longitude: 127.0738487
+    restaurantId: 0,
+    latitude: 0,
+    longitude: 0,
+    restaurantName: '',
+    tags: [],
+    address: '',
+    thumbnailPictureUrl: '',
+    emotion: ''
   })
 
   const getMyLocation = () => {
@@ -51,10 +85,6 @@ export default function Map() {
     }
   }
 
-  const refreshRestaurants = () => {
-    console.log('식당정보 재요청');
-  }
-
   // 현재 위치 받아오기
   useEffect(() => {
     getMyLocation();
@@ -62,36 +92,47 @@ export default function Map() {
 
   const mapRef = useRef<naver.maps.Map | null>(null);
 
-  // useEffect(() => {
-  //     const map = mapRef?.current;
+  const user = useQuery<UserInfo>(
+    "userInfo",
+    getUserInfo,
+  );
 
-  //     const bounds: naver.maps.PointBounds = map.getBounds();
-  //         console.log(bounds.minX())
-  //         console.log(bounds.minY());
-  //         console.log(bounds.maxX())
-  //         console.log(bounds.maxY());
+  const mukbtiAttribute = useQuery<MukbtiAttribute>(
+    "mukbtiAttribute",
+    () => getMukbtiAttribute(user.data?.mukbti || '')
+  )
 
-  //     // const handleIdle = () => {
+  const restaurants = useQuery<Array<RestaurantsInfo>>(
+    "restaurantsInfo",
+    () => getRestaurantsInfo(mapRef || null),
+    {
+      onSuccess: (data) => {
+        console.log(data)
+      },
+      select: (data) => {
+        return data?.map(e => {
+          let updatedEmotion: string | undefined;
+          if (e.emotion === 'positive') {
+            updatedEmotion = user.data?.smileImageUrl || mukbtiAttribute.data?.smileImageUrl;
+          } else if (e.emotion === 'negative') {
+            updatedEmotion = user.data?.sadImageUrl || mukbtiAttribute.data?.sadImageUrl;
+          } else if (e.emotion === 'neutral') {
+            updatedEmotion = user.data?.neutralImageUrl || mukbtiAttribute.data?.neutralImageUrl;
+          } else {
+            updatedEmotion = e.emotion;
+          }
+          return {
+            ...e,
+            emotion: updatedEmotion
+          };
+        })
+      },
+    }
+  );
 
-        
-  //     // };
-
-  //     // navermaps.Event.addListener(map, 'idle', handleIdle);
-
-  //     // return () => {
-  //     //   navermaps.Event.removeListener(map, 'idle', handleIdle);
-  //     // };
-  //   }
-  // }, [mapRef]);
-
-
-  let restaurantOne: PreviewRestaurantProps = {
-    id: 'test',
-    thumbnailPictureUrl: './icons/logo-transparent.png',
-    restaurantName: '60계 치킨',
-    address: '서울 광진구 화양동 45-99',
-    tags: ['치킨', '양념치킨', '맛있다']
-  }
+  useEffect(()=>{
+    console.log(previewRestaurant);
+  },[previewRestaurant])
 
   return (
     <>
@@ -106,9 +147,10 @@ export default function Map() {
         >
 
           <NaverMap
+            ref={mapRef}
             defaultZoom={17}
             defaultMapTypeId={navermaps.MapTypeId.NORMAL}
-            center={new navermaps.LatLng(myLocation.latitude, myLocation.longitude)}
+            defaultCenter={new navermaps.LatLng(myLocation.latitude, myLocation.longitude)}
           >
             {
               myLocation.isAvailable && <Marker
@@ -119,31 +161,55 @@ export default function Map() {
               />
 
             }
-
             {
-              //previewRestaurant.isAvailable
-              myLocation.isAvailable &&
-                <Marker
-                  onClick={()=>navigate(`/review/${restaurantOne.id}`)}
-                  position={new navermaps.LatLng(previewRestaurant.latitude, previewRestaurant.longitude)}
-                  icon={{
-                    content: renderToString(
-                      <PreviewRestaurant
-                        id={restaurantOne.id}
-                        thumbnailPictureUrl={restaurantOne.thumbnailPictureUrl}
-                        restaurantName={restaurantOne.restaurantName}
-                        address={restaurantOne.address}
-                        tags={restaurantOne.tags}
-                      />
-                    ),
-                  }}
-                />
+              restaurants?.data?.map((e) => {
+                return (
+                  <Marker
+                    onClick={(event: naver.maps.PointerEvent) => {
+                      event.pointerEvent.stopPropagation();
+                      setPreviewRestaurant({
+                        isAvailable: true,
+                        restaurantId: e.restaurantId,
+                        latitude: e.latitude,
+                        longitude: e.longitude,
+                        restaurantName: e.restaurantName,
+                        tags: e.tags,
+                        address: e.address,
+                        thumbnailPictureUrl: e.thumbnailPictureUrl,
+                        emotion: e.emotion || ''
+                      })
+                    }}
+                    position={new navermaps.LatLng(e.latitude, e.longitude)}
+                    icon={{
+                      content: `<img width="50" className=${styles.faceMapMarker} src="${e.emotion}"  />`,
+                    }}
+                  />
+                )
+              })
+            }
+            {
+              previewRestaurant.isAvailable &&
+              <Marker
+                onClick={() => navigate(`/review/${previewRestaurant.restaurantId}`)}
+                position={new navermaps.LatLng(previewRestaurant.latitude, previewRestaurant.longitude)}
+                icon={{
+                  content: renderToString(
+                    <PreviewRestaurant
+                      id={previewRestaurant.restaurantId}
+                      thumbnailPictureUrl={previewRestaurant.thumbnailPictureUrl}
+                      restaurantName={previewRestaurant.restaurantName}
+                      address={previewRestaurant.address}
+                      tags={previewRestaurant.tags}
+                    />),
+                  anchor: new naver.maps.Point(50, 60)
+                }}
+              />
             }
 
           </NaverMap>
         </MapDiv>
-        <div onClick={getMyLocation} className={styles.myLocation}><MdMyLocation size={"30"} color={"grey"} /></div>
-        <div onClick={refreshRestaurants} className={styles.refresh}><MdRefresh size={"30"} color={"grey"} /></div>
+        <button onClick={getMyLocation} className={styles.myLocation}><MdMyLocation size={"30"} color={"grey"} /></button>
+        <button onClick={() => restaurants?.refetch} className={styles.refresh}><MdRefresh size={"30"} color={"grey"} /></button>
       </div>
       <NavBar />
     </>

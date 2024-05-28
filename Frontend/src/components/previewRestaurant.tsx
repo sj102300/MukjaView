@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 
 export interface PreviewRestaurantProps {
-    id?: string;
+    id?: number;
     thumbnailPictureUrl: string;
     restaurantName: string;
     address: string;
