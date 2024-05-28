@@ -34,7 +34,7 @@
 
 
 .tags>div {
-    background-color: #ff6c1a;
+    border: 1px solid #ff6c1a;
     padding: 3px 10px;
     border-radius: 25px;
     font-size: small;
@@ -152,4 +152,15 @@
     perspective-origin: center;
     transform-style: preserve-3d;
     transform: rotateY(-180deg);
+}
+
+.more{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size:15px;
+    border-radius: 25px;
+    padding:3px 10px;
+    border: 1px solid #ff6c1a;
 }

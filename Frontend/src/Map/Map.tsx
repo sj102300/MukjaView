@@ -79,6 +79,7 @@ export default function Map() {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
         });
+        mapRef.current?.setCenter(new navermaps.LatLng(position.coords.latitude, position.coords.longitude))
       });
     } else {
       window.alert("현재위치를 알수 없습니다.");
@@ -130,10 +131,6 @@ export default function Map() {
     }
   );
 
-  useEffect(()=>{
-    console.log(previewRestaurant);
-  },[previewRestaurant])
-
   return (
     <>
       <div className={styles.mapContainer}>
@@ -143,9 +140,8 @@ export default function Map() {
             width: '100%',
             height: '100%',
           }}
-          onClick={(e) => setPreviewRestaurant({...previewRestaurant, isAvailable: false})}
+          onClick={(e) => setPreviewRestaurant({ ...previewRestaurant, isAvailable: false })}
         >
-
           <NaverMap
             ref={mapRef}
             defaultZoom={17}
@@ -182,6 +178,7 @@ export default function Map() {
                     position={new navermaps.LatLng(e.latitude, e.longitude)}
                     icon={{
                       content: `<img width="50" className=${styles.faceMapMarker} src="${e.emotion}"  />`,
+                      anchor: new naver.maps.Point(25, 25)
                     }}
                   />
                 )
@@ -201,7 +198,7 @@ export default function Map() {
                       address={previewRestaurant.address}
                       tags={previewRestaurant.tags}
                     />),
-                  anchor: new naver.maps.Point(50, 60)
+                  anchor: new naver.maps.Point(80, 80)
                 }}
               />
             }

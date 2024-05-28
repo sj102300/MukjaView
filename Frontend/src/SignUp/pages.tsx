@@ -124,8 +124,6 @@ interface FifthPageProps {
 
 export function FifthPage({ setIsResonable, setStep }: FifthPageProps) {
 
-    let navigator = useNavigate()
-
     const submitSignUp = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         const target = e.target as HTMLDivElement;
         if (target.id === 'R') {
@@ -157,8 +155,6 @@ interface SixthPageProps {
 }
 
 export function SixthPage({ userInputInfo, setStep }: SixthPageProps) {
-
-    let navigator = useNavigate()
 
     const onSuccess = () => {
         setStep(3);

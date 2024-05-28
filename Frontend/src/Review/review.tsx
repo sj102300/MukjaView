@@ -73,11 +73,12 @@ function Header() {
         </div>
         <div className={styles.icons}>
             <div className="flex flex-row gap-[5px] ">
-                <GoHeartFill size={"27"} color={"red"} />
-                <FaRegComment size={"27"} color={"gray"} />
-                <HiOutlineShare size={'27'} color={"gray"} />
+                <GoHeartFill size={"27"} color={"ff6c1a"} />
+                <FaRegComment size={"27"} color={"ff6c1a"} />
+                {/* <HiOutlineShare size={'27'} color={"gray"} /> */}
+            <TbLocationShare size={'27'} color={'ff6c1a'} />
             </div>
-            <TbLocationShare size={'27'} color={'gray'} />
+            <div className={styles.more}>다른 캐릭터의 리뷰 더보기 &gt;&gt;</div>
         </div>
     </div>)
 }
