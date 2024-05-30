@@ -142,13 +142,13 @@ export function Map() {
 
 
   let [searchValue, setSearchValue] = useState<string>('도우터')
-  let [searchOption, setSearchOption] = useState<string>('')
-
+  let [searchOption, setSearchOption] = useState<'tag' | 'keyword'>('keyword')
 
   const restaurantsByTag = useQuery<Array<RestaurantsInfo>>(
-    ["restaurantsInfoByTag", searchValue],
+    "restaurantsInfoByTag",
     () => getRestaurantsInfobyTag(searchValue),
     {
+      enabled:false,
       onSuccess: (data) => {
         setRestaurants(data);
       },
@@ -177,9 +177,10 @@ export function Map() {
   //키워드 검색 되는지 확인하기
 
   const restaurantsByKeyword = useQuery<Array<RestaurantsInfo>>(
-    ["restaurantsInfoByKeyword", searchValue],
+    "restaurantsInfoByKeyword",
     () => getRestaurantsInfobyKeyword(searchValue),
     {
+      enabled:false,
       onSuccess: (data) => {
         setRestaurants(data);
       },
@@ -204,23 +205,25 @@ export function Map() {
     }
   );
 
+  const searchStart = () => {
+    if(searchOption === 'tag'){
+      restaurantsByTag.refetch();
+    }
+    else{
+      restaurantsByKeyword.refetch();
+    }
+  }
+
   return (
     <>
       <div className={styles.mapContainer}>
-        <div className={styles.searchBar}><Search setSearchOption={setSearchOption} setSearchValue={setSearchValue}/></div>
+        <div className={styles.searchBar}><Search searchStart={searchStart} setSearchOption={setSearchOption} setSearchValue={setSearchValue}/></div>
         <MapDiv
           style={{
             width: '100%',
             height: '100%',
           }}
           onClick={(e) => setPreviewRestaurant({ ...previewRestaurant, isAvailable: false })}
-          // onMouseDown={(e)=> {
-          //   console.log('dragging')
-          //   let tmp = getLatLngBounds(mapRef || null);
-          //   if(!tmp){
-          //     setBound(tmp)
-          //   }
-          // }}
         >
           <NaverMap
             ref={mapRef}
@@ -287,8 +290,7 @@ export function Map() {
         </MapDiv>
         <button onClick={getMyLocation} className={styles.myLocation}><MdMyLocation size={"30"} color={"grey"} /></button>
         <button onClick={() => {
-          // restaurants?.refetch
-          // console.log(restaurants?.isFetching)
+          restaurantsByCoord.refetch();
           }} className={styles.refresh}><MdRefresh size={"30"} color={"grey"} /></button>
       </div>
       <NavBar />

@@ -40,7 +40,6 @@ export const getLatLngBounds = (mapRef: React.MutableRefObject<naver.maps.Map | 
     return bound;
   }
 
-
   export const getRestaurantsInfobyTag = (tag: string)=>{
     return axios.get('https://mukjaview.kro.kr/api/v1/restaurants/by-tag',{
         params: {
@@ -57,7 +56,7 @@ export const getLatLngBounds = (mapRef: React.MutableRefObject<naver.maps.Map | 
         params: {
             page:0,
             name: name,
-            is_sort: true,
+            is_sort: false,
         }
     })
     .then(response => response.data);

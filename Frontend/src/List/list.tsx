@@ -7,7 +7,7 @@ import styles from "./list.module.css"
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { RestaurantsInfo } from "../Map/Map";
-import { getRestaurantsInfobyCoord, getRestaurantsInfobyList } from "../apis/restaurantsInfo";
+import { getRestaurantsInfobyCoord, getRestaurantsInfobyKeyword, getRestaurantsInfobyList, getRestaurantsInfobyTag } from "../apis/restaurantsInfo";
 import { Link, useNavigate } from "react-router-dom";
 
 interface RestaurantsItemObj {
@@ -16,30 +16,62 @@ interface RestaurantsItemObj {
     address: string;
 }
 
-
 export default function List() {
 
-    let [searchOption, setSearchOption] = useState<string>();
-    let [searchValue, setSearchValue] = useState<string>();
+    let [searchOption, setSearchOption] = useState<'tag' | 'keyword'>('keyword');
+    let [searchValue, setSearchValue] = useState<string>('');
+
+    let [restaurants, setRestaurants] = useState<Array<RestaurantsInfo>>();
 
     const restaurantsByList = useQuery<Array<RestaurantsInfo>>(
         "restaurantsInfoByList",
         getRestaurantsInfobyList,
         {
             onSuccess: (data) => {
-                console.log(data);
+                setRestaurants(data);
             },
         }
     );
 
+    const restaurantsByTag = useQuery<Array<RestaurantsInfo>>(
+        "restaurantsInfoByTag",
+        () => getRestaurantsInfobyTag(searchValue),
+        {
+            enabled: false,
+            onSuccess: (data) => {
+                setRestaurants(data);
+            }
+        }
+    );
+
+    const restaurantsByKeyword = useQuery<Array<RestaurantsInfo>>(
+        "restaurantsInfoByKeyword",
+        () => getRestaurantsInfobyKeyword(searchValue),
+        {
+            enabled: false,
+            onSuccess: (data) => {
+                setRestaurants(data);
+            }
+        }
+    );
+
+
+    const searchStart = () => {
+        if (searchOption === 'tag') {
+            restaurantsByTag.refetch();
+        }
+        else {
+            restaurantsByKeyword.refetch();
+        }
+    }
     let navigate = useNavigate();
 
     return (
         <>
-            <div className={styles.searchBar}><Search setSearchOption={setSearchOption} setSearchValue={setSearchValue} /></div>
+            <div className={styles.searchBar}><Search searchStart={searchStart} setSearchOption={setSearchOption} setSearchValue={setSearchValue} /></div>
             <div className="mb-[58px]">
                 {
-                    restaurantsByList?.data?.map((item, i) => {
+                    restaurants?.map((item, i) => {
                         return (
                             <div onClick={() => navigate(`/review/${item.restaurantId}`)} key={i} className={styles.listItem}>
                                 <img src={item.thumbnailPictureUrl} alt="썸네일 이미지" />
