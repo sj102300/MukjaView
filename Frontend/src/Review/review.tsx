@@ -88,6 +88,38 @@ export default function Review() {
      return () => clearInterval(intervalId);
     }, [scrollDirection]);
 
+    let imagesRef = useRef<HTMLDivElement | null>(null)
+    let [imagesScrollDirection, setImagesScrollDirection] = useState<'left' | 'right'>('right'); // 스크롤 방향 상태
+
+    useEffect(() => {
+        if(isFliped){
+            const intervalId = setInterval(() => {
+                if (imagesRef.current) {
+                    if (imagesScrollDirection === 'right') {
+                        imagesRef.current.scrollLeft += 1;
+                        // 오른쪽 끝에 도달하면 왼쪽 방향으로 스크롤 방향 변경
+                        if (imagesRef.current.scrollLeft >= (imagesRef.current.scrollWidth - imagesRef.current.clientWidth)) {
+                            setImagesScrollDirection('left');
+                        }
+                    } else {
+                        imagesRef.current.scrollLeft -= 1;
+                        // 왼쪽 끝에 도달하면 오른쪽 방향으로 스크롤 방향 변경
+                        if (imagesRef.current.scrollLeft === 0) {
+                            setImagesScrollDirection('right');
+                        }
+                    }
+                }
+            }, 50); // 이동 간격을 조절하여 스크롤 속도 조절 가능
+         return () => clearInterval(intervalId);
+        }
+        else{
+            if(imagesRef.current){
+                imagesRef.current.scrollLeft = 0;
+                setImagesScrollDirection('right');
+            }
+        }
+    }, [imagesScrollDirection, isFliped]);
+
     return (
         <>
             <div className={styles.header}>
@@ -121,10 +153,10 @@ export default function Review() {
                     </div>
 
                     <div className={styles.back}>
-                        <div className={styles.images}>
+                        <div ref={imagesRef} className={styles.images}>
                             {
                                 detailRestaurantInfo?.data?.detailedPictureList.map((e) => {
-                                    return <img src={e} alt="음식 이미지" />
+                                    return <img className="w-[120px] h-[120px] object-fill" width={"120px"} height={"120px"} src={e} alt="음식 이미지" />
                                 })
                             }
                         </div>
