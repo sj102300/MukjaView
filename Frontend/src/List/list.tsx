@@ -5,8 +5,12 @@ import { IoIosArrowForward } from "react-icons/io";
 
 import styles from "./list.module.css"
 import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
+import { RestaurantsInfo } from "../Map/Map";
+import { getRestaurantsInfobyCoord, getRestaurantsInfobyList } from "../apis/restaurantsInfo";
+import { Link, useNavigate } from "react-router-dom";
 
-interface RestaurantsItemObj{
+interface RestaurantsItemObj {
     thumbnail: string;
     name: string;
     address: string;
@@ -15,66 +19,32 @@ interface RestaurantsItemObj{
 
 export default function List() {
 
-    let [restaurants, setRestaurants] = useState<Array<RestaurantsItemObj>>([] || null)
+    let [searchOption, setSearchOption] = useState<string>();
+    let [searchValue, setSearchValue] = useState<string>();
 
-    useEffect(()=>{
-        setTimeout(()=>{
-            setRestaurants([{
-                thumbnail: './icons/logo-transparent.png',
-                name: '가츠시',
-                address: '서울 광진구 광나루로 418',
-            },{
-                thumbnail: './icons/logo-transparent.png',
-                name: '가츠시',
-                address: '서울 광진구 광나루로 418',
-            },{
-                thumbnail: './icons/logo-transparent.png',
-                name: '가츠시',
-                address: '서울 광진구 광나루로 418',
-            },{
-                thumbnail: './icons/logo-transparent.png',
-                name: '가츠시',
-                address: '서울 광진구 광나루로 418',
-            },{
-                thumbnail: './icons/logo-transparent.png',
-                name: '가츠시',
-                address: '서울 광진구 광나루로 418',
-            },{
-                thumbnail: './icons/logo-transparent.png',
-                name: '가츠시',
-                address: '서울 광진구 광나루로 418',
-            },{
-                thumbnail: './icons/logo-transparent.png',
-                name: '가츠시',
-                address: '서울 광진구 광나루로 418',
-            },{
-                thumbnail: './icons/logo-transparent.png',
-                name: '가츠시',
-                address: '서울 광진구 광나루로 418',
-            },{
-                thumbnail: './icons/logo-transparent.png',
-                name: '가츠시',
-                address: '서울 광진구 광나루로 418',
-            },{
-                thumbnail: './icons/logo-transparent.png',
-                name: '가츠시',
-                address: '서울 광진구 광나루로 418',
-            },])
-        },3000)
-    },[])
+    const restaurantsByList = useQuery<Array<RestaurantsInfo>>(
+        "restaurantsInfoByList",
+        getRestaurantsInfobyList,
+        {
+            onSuccess: (data) => {
+                console.log(data);
+            },
+        }
+    );
+
+    let navigate = useNavigate();
 
     return (
         <>
-            <div className={styles.searchBar}><Search /></div>
+            <div className={styles.searchBar}><Search setSearchOption={setSearchOption} setSearchValue={setSearchValue} /></div>
             <div className="mb-[58px]">
-            {
-                    restaurants?.map((item, i) => {
-
+                {
+                    restaurantsByList?.data?.map((item, i) => {
                         return (
-                            <div key={i} className={styles.listItem}>
-                                <img src={item.thumbnail} alt="썸네일 이미지" />
+                            <div onClick={() => navigate(`/review/${item.restaurantId}`)} key={i} className={styles.listItem}>
+                                <img src={item.thumbnailPictureUrl} alt="썸네일 이미지" />
                                 <div>
-                                    <h2 className="text-lg">{item.name}</h2>
+                                    <h2 className="text-lg">{item.restaurantName}</h2>
                                     <h3 className="text-sm">{item.address}</h3>
                                 </div>
                                 <IoIosArrowForward color="ff6c1a" size={"45"} />

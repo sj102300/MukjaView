@@ -4,7 +4,7 @@ import { SignUp } from './SignUp/SignUp';
 import Intro from './Intro/Intro';
 import MyPage from './Mypage/mypage';
 import List from './List/list';
-import Map from './Map/Map';
+import { Map } from './Map/Map';
 import { NavermapsProvider } from 'react-naver-maps';
 import { Suspense } from 'react';
 import Loading from './components/Loading';
@@ -32,7 +32,7 @@ function App() {
           </Suspense>
         } />
 
-        <Route path={"/review/:id"} element={<Review />} />
+        <Route path={"/review/:restaurantId"} element={<Review />} />
       </Routes>
       <ReactQueryDevtools />
     </>

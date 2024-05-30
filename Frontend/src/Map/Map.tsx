@@ -11,7 +11,7 @@ import { renderToString } from "react-dom/server";
 import { PreviewRestaurant } from "../components/previewRestaurant";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
-import { getRestaurantsInfo } from "../apis/restaurantsInfo";
+import { getLatLngBounds, getRestaurantsInfobyCoord, getRestaurantsInfobyKeyword, getRestaurantsInfobyTag } from "../apis/restaurantsInfo";
 import { UserInfo } from "../SignUp/check";
 import { getUserInfo } from "../apis/userInfo";
 import { MukbtiAttribute, getMukbtiAttribute } from "../utils/handleMBTI";
@@ -23,7 +23,7 @@ interface LocationType {
   longitude: number;
 }
 
-interface RestaurantsInfo {
+export interface RestaurantsInfo {
   restaurantId: number;
   restaurantName: string;
   tags: Array<string>;
@@ -46,7 +46,14 @@ export interface PreviewRestaurantInfo {
   emotion: string;
 }
 
-export default function Map() {
+interface Bound{
+  min_lat: number;
+  max_lat: number;
+  min_long:  number;
+  max_long:  number;
+}
+
+export function Map() {
 
   const navermaps = useNavermaps();
 
@@ -103,12 +110,78 @@ export default function Map() {
     () => getMukbtiAttribute(user.data?.mukbti || '')
   )
 
-  const restaurants = useQuery<Array<RestaurantsInfo>>(
-    "restaurantsInfo",
-    () => getRestaurantsInfo(mapRef || null),
+  let [restaurants, setRestaurants] = useState<Array<RestaurantsInfo>>([])
+
+  const restaurantsByCoord = useQuery<Array<RestaurantsInfo>>(
+    "restaurantsInfoByCoord",
+    () => getRestaurantsInfobyCoord(mapRef || null),
     {
       onSuccess: (data) => {
-        console.log(data)
+        setRestaurants(data);
+      },
+      select: (data) => {
+        return data?.map(e => {
+          let updatedEmotion: string | undefined;
+          if (e.emotion === 'positive') {
+            updatedEmotion = user.data?.smileImageUrl || mukbtiAttribute.data?.smileImageUrl;
+          } else if (e.emotion === 'negative') {
+            updatedEmotion = user.data?.sadImageUrl || mukbtiAttribute.data?.sadImageUrl;
+          } else if (e.emotion === 'neutral') {
+            updatedEmotion = user.data?.neutralImageUrl || mukbtiAttribute.data?.neutralImageUrl;
+          } else {
+            updatedEmotion = e.emotion;
+          }
+          return {
+            ...e,
+            emotion: updatedEmotion
+          };
+        })
+      },
+    }
+  );
+
+
+  let [searchValue, setSearchValue] = useState<string>('도우터')
+  let [searchOption, setSearchOption] = useState<string>('')
+
+
+  const restaurantsByTag = useQuery<Array<RestaurantsInfo>>(
+    ["restaurantsInfoByTag", searchValue],
+    () => getRestaurantsInfobyTag(searchValue),
+    {
+      onSuccess: (data) => {
+        setRestaurants(data);
+      },
+      select: (data) => {
+        return data?.map(e => {
+          let updatedEmotion: string | undefined;
+          if (e.emotion === 'positive') {
+            updatedEmotion = user.data?.smileImageUrl || mukbtiAttribute.data?.smileImageUrl;
+          } else if (e.emotion === 'negative') {
+            updatedEmotion = user.data?.sadImageUrl || mukbtiAttribute.data?.sadImageUrl;
+          } else if (e.emotion === 'neutral') {
+            updatedEmotion = user.data?.neutralImageUrl || mukbtiAttribute.data?.neutralImageUrl;
+          } else {
+            updatedEmotion = e.emotion;
+          }
+          return {
+            ...e,
+            emotion: updatedEmotion
+          };
+        })
+      },
+    }
+  );
+
+
+  //키워드 검색 되는지 확인하기
+
+  const restaurantsByKeyword = useQuery<Array<RestaurantsInfo>>(
+    ["restaurantsInfoByKeyword", searchValue],
+    () => getRestaurantsInfobyKeyword(searchValue),
+    {
+      onSuccess: (data) => {
+        setRestaurants(data);
       },
       select: (data) => {
         return data?.map(e => {
@@ -134,13 +207,20 @@ export default function Map() {
   return (
     <>
       <div className={styles.mapContainer}>
-        <div className={styles.searchBar}><Search /></div>
+        <div className={styles.searchBar}><Search setSearchOption={setSearchOption} setSearchValue={setSearchValue}/></div>
         <MapDiv
           style={{
             width: '100%',
             height: '100%',
           }}
           onClick={(e) => setPreviewRestaurant({ ...previewRestaurant, isAvailable: false })}
+          // onMouseDown={(e)=> {
+          //   console.log('dragging')
+          //   let tmp = getLatLngBounds(mapRef || null);
+          //   if(!tmp){
+          //     setBound(tmp)
+          //   }
+          // }}
         >
           <NaverMap
             ref={mapRef}
@@ -158,7 +238,7 @@ export default function Map() {
 
             }
             {
-              restaurants?.data?.map((e) => {
+              restaurants?.map((e) => {
                 return (
                   <Marker
                     onClick={(event: naver.maps.PointerEvent) => {
@@ -206,7 +286,10 @@ export default function Map() {
           </NaverMap>
         </MapDiv>
         <button onClick={getMyLocation} className={styles.myLocation}><MdMyLocation size={"30"} color={"grey"} /></button>
-        <button onClick={() => restaurants?.refetch} className={styles.refresh}><MdRefresh size={"30"} color={"grey"} /></button>
+        <button onClick={() => {
+          // restaurants?.refetch
+          // console.log(restaurants?.isFetching)
+          }} className={styles.refresh}><MdRefresh size={"30"} color={"grey"} /></button>
       </div>
       <NavBar />
     </>
