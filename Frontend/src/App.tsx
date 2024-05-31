@@ -8,7 +8,7 @@ import { Map } from './Map/Map';
 import { NavermapsProvider } from 'react-naver-maps';
 import { Suspense } from 'react';
 import Loading from './components/Loading';
-import Review from './Review/review';
+import ReviewCard from './Review/reviewCard';
 import { ReactQueryDevtools } from 'react-query/devtools'
 
 
@@ -32,7 +32,7 @@ function App() {
           </Suspense>
         } />
 
-        <Route path={"/review/:restaurantId"} element={<Review />} />
+        <Route path={"/review/:restaurantId"} element={<ReviewCard />} />
       </Routes>
       <ReactQueryDevtools />
     </>

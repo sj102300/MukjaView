@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import AOS from "aos";
 import "aos/dist/aos.css";
-import styles from './review.module.css'
+import styles from './reviewCard.module.css'
 import NavBar from "../components/NavBar";
 import { GoHeartFill } from "react-icons/go";
 import { FaRegComment } from "react-icons/fa6";
@@ -11,6 +11,12 @@ import { getDetailRestaurantInfo, getRestaurantTextReview } from "../apis/restau
 import { UserInfo } from "../SignUp/check";
 import { getUserInfo } from "../apis/userInfo";
 import { useParams, useSearchParams } from "react-router-dom";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { EffectCards } from "swiper/modules";
+
+import 'swiper/css';
+import 'swiper/css/effect-cards';
+import { HiMiniTrash } from "react-icons/hi2";
 
 interface DetailRestaurantInfo {
     restaurantId: number,
@@ -28,7 +34,7 @@ interface DetailRestaurantInfo {
     like: boolean;
 }
 
-export default function Review() {
+export default function ReviewCard() {
 
     let { restaurantId } = useParams();
     let [searchParams, setSearchParams] = useSearchParams();
@@ -36,12 +42,6 @@ export default function Review() {
     useEffect(() => {
         AOS.init();
     }, [])
-
-    let [isFliped, setIsFliped] = useState<boolean>(false);
-
-    const flipCard = () => {
-        setIsFliped(!isFliped)
-    }
 
     const user = useQuery<UserInfo>(
         "userInfo",
@@ -60,7 +60,7 @@ export default function Review() {
         'restaurantTextReview',
         () => getRestaurantTextReview({
             restaurantId: Number(restaurantId),
-            mukbti: searchParams.get('mukbti') ||  user?.data?.mukbti || ''
+            mukbti: searchParams.get('mukbti') || user?.data?.mukbti || ''
         })
     )
 
@@ -85,40 +85,33 @@ export default function Review() {
                 }
             }
         }, 50); // 이동 간격을 조절하여 스크롤 속도 조절 가능
-     return () => clearInterval(intervalId);
+        return () => clearInterval(intervalId);
     }, [scrollDirection]);
 
     let imagesRef = useRef<HTMLDivElement | null>(null)
     let [imagesScrollDirection, setImagesScrollDirection] = useState<'left' | 'right'>('right'); // 스크롤 방향 상태
 
     useEffect(() => {
-        if(isFliped){
-            const intervalId = setInterval(() => {
-                if (imagesRef.current) {
-                    if (imagesScrollDirection === 'right') {
-                        imagesRef.current.scrollLeft += 1;
-                        // 오른쪽 끝에 도달하면 왼쪽 방향으로 스크롤 방향 변경
-                        if (imagesRef.current.scrollLeft >= (imagesRef.current.scrollWidth - imagesRef.current.clientWidth)) {
-                            setImagesScrollDirection('left');
-                        }
-                    } else {
-                        imagesRef.current.scrollLeft -= 1;
-                        // 왼쪽 끝에 도달하면 오른쪽 방향으로 스크롤 방향 변경
-                        if (imagesRef.current.scrollLeft === 0) {
-                            setImagesScrollDirection('right');
-                        }
+
+        const intervalId = setInterval(() => {
+            if (imagesRef.current) {
+                if (imagesScrollDirection === 'right') {
+                    imagesRef.current.scrollLeft += 1;
+                    // 오른쪽 끝에 도달하면 왼쪽 방향으로 스크롤 방향 변경
+                    if (imagesRef.current.scrollLeft >= (imagesRef.current.scrollWidth - imagesRef.current.clientWidth)) {
+                        setImagesScrollDirection('left');
+                    }
+                } else {
+                    imagesRef.current.scrollLeft -= 1;
+                    // 왼쪽 끝에 도달하면 오른쪽 방향으로 스크롤 방향 변경
+                    if (imagesRef.current.scrollLeft === 0) {
+                        setImagesScrollDirection('right');
                     }
                 }
-            }, 50); // 이동 간격을 조절하여 스크롤 속도 조절 가능
-         return () => clearInterval(intervalId);
-        }
-        else{
-            if(imagesRef.current){
-                imagesRef.current.scrollLeft = 0;
-                setImagesScrollDirection('right');
             }
-        }
-    }, [imagesScrollDirection, isFliped]);
+        }, 50); // 이동 간격을 조절하여 스크롤 속도 조절 가능
+        return () => clearInterval(intervalId);
+    }, [imagesScrollDirection]);
 
     return (
         <>
@@ -144,18 +137,30 @@ export default function Review() {
                     <div className={styles.more}>다른 캐릭터의 리뷰 더보기 &gt;&gt;</div>
                 </div>
             </div>
-            <div onClick={flipCard} className={styles.down}>
-                <div className={isFliped ? styles.cardFlip : styles.card}>
-                    <div className={styles.front}>
-                        <p>클릭해서 리뷰 확인하기!!</p>
+
+            <Swiper
+                effect={'cards'}
+                grabCursor={true}
+                modules={[EffectCards]}
+                className={styles.swiperContainer}
+                cardsEffect={{
+                    perSlideOffset: 4,
+                    perSlideRotate: 1.5,
+                    slideShadows: false,
+                }}
+
+            >
+                <SwiperSlide>
+                    <div className={styles.firstCard}>
                         <div data-aos="zoom-in">도표</div>
                         <div data-aos="zoom-in">
                             {/* <img src={`./MBTICharacters/${detailRestaurantInfo?.data?.fitMukbti}_smile.png`} /> */}
-                            <img data-aos="zoom-in" src={"./MBTICharacters/SFM-F_smile.png"} alt="추천 먹비티아이 캐릭터"/>
+                            <img data-aos="zoom-in" src={"./MBTICharacters/SFM-F_smile.png"} alt="추천 먹비티아이 캐릭터" />
                         </div>
                     </div>
-
-                    <div className={styles.back}>
+                </SwiperSlide>
+                <SwiperSlide>
+                    <div className={styles.secondCard}>
                         <div ref={imagesRef} className={styles.images}>
                             {
                                 detailRestaurantInfo?.data?.detailedPictureList.map((e) => {
@@ -163,10 +168,35 @@ export default function Review() {
                                 })
                             }
                         </div>
-                        <div className={styles.reviewTxt} dangerouslySetInnerHTML={{ __html: restaurantTextReview?.data || ''}} />
+                        <div className={styles.reviewTxt} dangerouslySetInnerHTML={{ __html: restaurantTextReview?.data || '' }} />
                     </div>
-                </div>
-            </div>
+                </SwiperSlide>
+                <SwiperSlide>
+                    <div className={styles.thirdCard}>
+                        <div className={styles.comments} >
+                            <div className={styles.comment}>
+                                <img alt="프사" className="w-[50px] h-[50px] rounded-full" />
+                                <p>아니 공부 하기 싫다 진짜로 하암 집가서 자고 싶다 졸리다 배고프다아니 공부 하기 싫다 진짜로 하암 집가서 자고 싶다 졸리다 배고프다아니 공부 하기 싫다 진짜로 하암 집가서 자고 싶다 졸리다 배고프다</p>
+                                <HiMiniTrash className="mt-2" size={'16'} color={'gray'} />
+                            </div>
+                            <div className={styles.comment}>
+                                <img alt="프사" className="w-[50px] h-[50px] rounded-full" />
+                                <p>아니 공부 하기 싫다 진짜로 하암 집가서 자고 싶다 졸리다 배고프다아니 공부 하기 싫다 진짜로 하암 집가서 자고 싶다 졸리다 배고프다아니 공부 하기 싫다 진짜로 하암 집가서 자고 싶다 졸리다 배고프다</p>
+                                <HiMiniTrash className="mt-2" size={'16'} color={'gray'} />
+                            </div><div className={styles.comment}>
+                                <img alt="프사" className="w-[50px] h-[50px] rounded-full" />
+                                <p>아니 공부 하기 싫다 진짜로 하암 집가서 자고 싶다 졸리다 배고프다아니 공부 하기 싫다 진짜로 하암 집가서 자고 싶다 졸리다 배고프다아니 공부 하기 싫다 진짜로 하암 집가서 자고 싶다 졸리다 배고프다</p>
+                                <HiMiniTrash className="mt-2" size={'16'} color={'gray'} />
+                            </div>
+                        </div>
+                        <div className={styles.commentInput}>
+                            <img alt="프사" className="w-[50px] h-[50px] rounded-full" />
+                            <input type="text" placeholder="댓글.." />
+                            <button>게시..</button>
+                        </div>
+                    </div>
+                </SwiperSlide>
+            </Swiper>
             <NavBar />
         </>
     )
