@@ -33,12 +33,7 @@ export const initUserInfo = (userInputInfo: UserInputInfo) => {
   })
 }
 
-// export const useInitUserInfo = (userInputInfo: UserInputInfo, onSuccess: ()=>void) => {
-//   return useQuery(
-//     "userInfo",
-//     () => initUserInfo(userInputInfo),
-//     {
-//       onSuccess: onSuccess,
-//     }
-//   )
-// }
+export const getWishItems = (oauthIdentifier: string)=>{
+  return axios.get(`https://mukjaview.kro.kr/api/v1/${oauthIdentifier}/like_list`)
+  .then(response => response.data);
+}

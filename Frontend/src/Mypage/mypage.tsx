@@ -1,20 +1,14 @@
-import { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import styles from "./mypage.module.css"
 import { IoArrowRedoOutline, IoSettingsOutline } from "react-icons/io5";
 import { useQuery } from "react-query";
 import { MukbtiAttribute, getMukbtiAttribute } from "../utils/handleMBTI";
-import { getUserInfo } from "../apis/userInfo";
+import { getUserInfo, getWishItems } from "../apis/userInfo";
 import { UserInfo } from "../SignUp/check";
 import Loading from "../components/Loading";
-import { Link, useNavigate } from "react-router-dom";
-import { AxiosError } from "axios";
+import { Link } from "react-router-dom";
+import { RestaurantsInfo } from "../Map/Map";
 
-interface wishlistItemObj {
-    thumbnail: string;
-    restaurantName: string;
-    address: string;
-}
 
 export default function MyPage() {
 
@@ -27,8 +21,12 @@ export default function MyPage() {
         "mukbtiAttribute",
         ()=> getMukbtiAttribute(user.data?.mukbti || '')
     )
+
+    const wishItems = useQuery<Array<RestaurantsInfo>>(
+        'wishItems',
+        ()=>getWishItems(user?.data?.oauthIdentifier || '')
+    )
     
-    let [wishItems, setWishItems] = useState<Array<wishlistItemObj>>([])
 
     if (user.isLoading) return <Loading />;
 
@@ -36,7 +34,7 @@ export default function MyPage() {
         <>
             {(user.data && mukbtiAttribute !== null) && <>
                 <div className={styles.profile}>
-                    <img src="./icons/logo-transparent.png" alt="프사" width={"100"} />
+                    <img src={user?.data?.smileImageUrl || mukbtiAttribute?.data?.smileImageUrl} alt="프사" width={"100"} />
                     <div>
                         <p className="text-sm">{mukbtiAttribute.data?.title}({user.data?.mukbti})</p>
                         <h2 className="text-xl">{mukbtiAttribute.data?.taste}</h2>
@@ -47,11 +45,11 @@ export default function MyPage() {
                 <div className={styles.wishlist}>
                     <h2>위시리스트</h2>
                     {
-                        wishItems.length ?
-                            (wishItems?.map((item, i) => {
+                        wishItems?.data?.length ?
+                            (wishItems?.data?.map((item, i) => {
                                 return (
                                     <div key={i} className={styles.wishItem}>
-                                        <img src={item.thumbnail} alt="썸네일 이미지" />
+                                        <img src={item.thumbnailPictureUrl} alt="썸네일 이미지" />
                                         <div>
                                             <h2 className="text-lg">{item.restaurantName}</h2>
                                             <h3 className="text-sm">{item.address}</h3>

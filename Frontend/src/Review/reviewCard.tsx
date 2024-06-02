@@ -3,9 +3,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import styles from './reviewCard.module.css'
 import NavBar from "../components/NavBar";
-import { GoHeartFill } from "react-icons/go";
-import { FaRegComment } from "react-icons/fa6";
-import { TbLocationShare } from "react-icons/tb";
+import { TbHeart, TbHeartFilled, TbLocationShare } from "react-icons/tb";
 import { useQuery } from "react-query";
 import { getDetailRestaurantInfo, getRestaurantTextReview } from "../apis/restaurantsInfo";
 import { UserInfo } from "../SignUp/check";
@@ -17,10 +15,20 @@ import { EffectCards } from "swiper/modules";
 import 'swiper/css';
 import 'swiper/css/effect-cards';
 import { HiMiniTrash } from "react-icons/hi2";
+import { useHandleLike } from "../apis/handleLike";
+import { useDeleteComment, usePostComment } from "../apis/handleComment";
 
-interface DetailRestaurantInfo {
-    restaurantId: number,
+interface Comment {
+    commentId: number;
+    oauthIdentifier: string;
+    nickname: string;
+    text: string;
+}
+
+export interface DetailRestaurantInfo {
+    restaurantId: number;
     restaurantName: string;
+    comments: Array<Comment>;
     tags: Array<string>;
     detailedPictureList: Array<string>;
     address: string;
@@ -39,29 +47,57 @@ export default function ReviewCard() {
     let { restaurantId } = useParams();
     let [searchParams, setSearchParams] = useSearchParams();
 
+    let [user, setUser] = useState<UserInfo>()
+
     useEffect(() => {
         AOS.init();
     }, [])
 
-    const user = useQuery<UserInfo>(
+    const userQuery = useQuery<UserInfo>(
         "userInfo",
         getUserInfo,
+        {
+            onSuccess: (data)=> setUser(data)
+        }
     );
 
-    const detailRestaurantInfo = useQuery<DetailRestaurantInfo>(
+    let [profileImg, setProfileImg] = useState<string>('');
+
+    let [detailRestaurantInfo, setDetailRestaurantInfo] = useState<DetailRestaurantInfo>();
+
+    const detailRestaurantInfoQuery = useQuery<DetailRestaurantInfo>(
         'detailRestaurantInfo',
         () => getDetailRestaurantInfo({
             restaurantId: Number(restaurantId),
-            oauthIdentifier: user?.data?.oauthIdentifier || ''
-        })
+            oauthIdentifier: user?.oauthIdentifier || userQuery?.data?.oauthIdentifier || ''
+        }),
+        {
+            onSuccess: (data) => {
+                setDetailRestaurantInfo(data);
+                if (data.emotion === 'positive') {
+                    setProfileImg(user?.smileImageUrl || `../MBTICharacters/${user?.mukbti}_smile.png`);
+                }
+                else if (data.emotion === 'neutral') {
+                    setProfileImg(user?.neutralImageUrl || `../MBTICharacters/${user?.mukbti}_neutral.png`)
+                }
+                else if (data.emotion === 'negative') {
+                    setProfileImg(user?.sadImageUrl || `../MBTICharacters/${user?.mukbti}_sad.png`)
+                }
+            }
+        }
     )
 
-    const restaurantTextReview = useQuery<string>(
+    let [restaurantTextReview, setRestaurantTextReview] = useState<string>('')
+
+    const restaurantTextReviewQuery = useQuery<string>(
         'restaurantTextReview',
         () => getRestaurantTextReview({
             restaurantId: Number(restaurantId),
-            mukbti: searchParams.get('mukbti') || user?.data?.mukbti || ''
-        })
+            mukbti: searchParams.get('mukbti') || userQuery?.data?.mukbti || user?.mukbti || ''
+        }),
+        {
+            onSuccess: (data)=> setRestaurantTextReview(data)
+        }
     )
 
     let tagsRef = useRef<HTMLDivElement | null>(null)
@@ -113,25 +149,46 @@ export default function ReviewCard() {
         return () => clearInterval(intervalId);
     }, [imagesScrollDirection]);
 
+    let commentRef = useRef<HTMLInputElement | null>(null)
+
+    const { mutate: handleLike } = useHandleLike()
+
+    const { mutate: postComment } = usePostComment();
+    const { mutate: deleteComment } = useDeleteComment();
+
+
     return (
         <>
             <div className={styles.header}>
                 <div className={styles.restaurant}>
-                    <img className="w-[30%] h-[84px]" src={detailRestaurantInfo?.data?.thumbnailPictureUrl} alt="썸네일 이미지" />
+                    <img className="w-[30%] h-[84px]" src={detailRestaurantInfo?.thumbnailPictureUrl} alt="썸네일 이미지" />
                     <div className={styles.info}>
-                        <h2 className="text-xl font-bold">{detailRestaurantInfo?.data?.restaurantName}</h2>
-                        <h3 className="font-semibold">{detailRestaurantInfo?.data?.address.substring(3)}</h3>
+                        <h2 className="text-xl font-bold">{detailRestaurantInfo?.restaurantName}</h2>
+                        <h3 className="font-semibold">{detailRestaurantInfo?.address.substring(7)}</h3>
                         <div className={styles.tags} ref={tagsRef}>
                             {
-                                detailRestaurantInfo?.data?.tags.map(e => <div>#{e}</div>)
+                                detailRestaurantInfo?.tags.map(e => <div>#{e}</div>)
                             }
                         </div>
                     </div>
                 </div>
                 <div className={styles.icons}>
                     <div className="flex flex-row gap-[5px] ">
-                        <GoHeartFill size={"27"} color={"ff6c1a"} />
-                        <FaRegComment size={"27"} color={"ff6c1a"} />
+                        {/* 여기 Post 요청 끝나기를 기다리는것때문에,, 하트 바뀌는게 좀 느리다.. */}
+                        <div onClick={() => {
+                            handleLike({
+                                like: detailRestaurantInfo?.like || false,
+                                oauthIdentifier: user?.oauthIdentifier || '',
+                                restaurantId: detailRestaurantInfo?.restaurantId || 0,
+                            })
+                        }}>
+                            {
+                                detailRestaurantInfo?.like ?
+                                    <TbHeartFilled size={"27"} color={"ff6c1a"} />
+                                    : <TbHeart size={"27"} color={"ff6c1a"} />
+
+                            }
+                        </div>
                         <TbLocationShare size={'27'} color={'ff6c1a'} />
                     </div>
                     <div className={styles.more}>다른 캐릭터의 리뷰 더보기 &gt;&gt;</div>
@@ -154,8 +211,7 @@ export default function ReviewCard() {
                     <div className={styles.firstCard}>
                         <div data-aos="zoom-in">도표</div>
                         <div data-aos="zoom-in">
-                            {/* <img src={`./MBTICharacters/${detailRestaurantInfo?.data?.fitMukbti}_smile.png`} /> */}
-                            <img data-aos="zoom-in" src={"./MBTICharacters/SFM-F_smile.png"} alt="추천 먹비티아이 캐릭터" />
+                            <img width={'200px'} height={'200px'} data-aos="zoom-in" src={`../MBTICharacters/${detailRestaurantInfo?.fitMukbti}_smile.png`} alt="추천 먹비티아이 캐릭터" />
                         </div>
                     </div>
                 </SwiperSlide>
@@ -163,36 +219,51 @@ export default function ReviewCard() {
                     <div className={styles.secondCard}>
                         <div ref={imagesRef} className={styles.images}>
                             {
-                                detailRestaurantInfo?.data?.detailedPictureList.map((e) => {
+                                detailRestaurantInfo?.detailedPictureList.map((e) => {
                                     return <img className="w-[120px] h-[120px] object-fill" width={"120px"} height={"120px"} src={e} alt="음식 이미지" />
                                 })
                             }
                         </div>
-                        <div className={styles.reviewTxt} dangerouslySetInnerHTML={{ __html: restaurantTextReview?.data || '' }} />
+                        <div className={styles.reviewTxt} dangerouslySetInnerHTML={{ __html: restaurantTextReview }} />
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className={styles.thirdCard}>
                         <div className={styles.comments} >
-                            <div className={styles.comment}>
-                                <img alt="프사" className="w-[50px] h-[50px] rounded-full" />
-                                <p>아니 공부 하기 싫다 진짜로 하암 집가서 자고 싶다 졸리다 배고프다아니 공부 하기 싫다 진짜로 하암 집가서 자고 싶다 졸리다 배고프다아니 공부 하기 싫다 진짜로 하암 집가서 자고 싶다 졸리다 배고프다</p>
-                                <HiMiniTrash className="mt-2" size={'16'} color={'gray'} />
-                            </div>
-                            <div className={styles.comment}>
-                                <img alt="프사" className="w-[50px] h-[50px] rounded-full" />
-                                <p>아니 공부 하기 싫다 진짜로 하암 집가서 자고 싶다 졸리다 배고프다아니 공부 하기 싫다 진짜로 하암 집가서 자고 싶다 졸리다 배고프다아니 공부 하기 싫다 진짜로 하암 집가서 자고 싶다 졸리다 배고프다</p>
-                                <HiMiniTrash className="mt-2" size={'16'} color={'gray'} />
-                            </div><div className={styles.comment}>
-                                <img alt="프사" className="w-[50px] h-[50px] rounded-full" />
-                                <p>아니 공부 하기 싫다 진짜로 하암 집가서 자고 싶다 졸리다 배고프다아니 공부 하기 싫다 진짜로 하암 집가서 자고 싶다 졸리다 배고프다아니 공부 하기 싫다 진짜로 하암 집가서 자고 싶다 졸리다 배고프다</p>
-                                <HiMiniTrash className="mt-2" size={'16'} color={'gray'} />
-                            </div>
+                            {
+                                detailRestaurantInfo?.comments.map((e) => {
+                                    return (
+                                        <div className={styles.comment}>
+                                            <img src={e.nickname} alt="프사" className="w-[50px] h-[50px] rounded-full" />
+                                            <p>{e?.text}</p>
+                                            {
+                                                e.oauthIdentifier === user?.oauthIdentifier && 
+                                                <div onClick={()=>{
+                                                    deleteComment({
+                                                        commentId: e.commentId,
+                                                        oauthIdentifier: e.oauthIdentifier,
+                                                        restaurantId: detailRestaurantInfo?.restaurantId,
+                                                    })
+                                                }}><HiMiniTrash className="mt-2" size={'16'} color={'gray'} /></div>
+
+                                            }
+                                        </div>
+                                    )
+                                })
+                            }
+
                         </div>
                         <div className={styles.commentInput}>
-                            <img alt="프사" className="w-[50px] h-[50px] rounded-full" />
-                            <input type="text" placeholder="댓글.." />
-                            <button>게시..</button>
+                            <img src={profileImg} alt="프사" className="w-[50px] h-[50px] rounded-full" />
+                            <input ref={commentRef} name="commentText" type="text" placeholder="댓글.." />
+                            <button onClick={()=>{
+                                postComment({
+                                    comment: commentRef?.current?.value || '',
+                                    restaurantId: detailRestaurantInfo?.restaurantId || 0,
+                                    oauthIdentifier: user?.oauthIdentifier || '',
+                                    profileImg: profileImg,
+                                })
+                            }}>게시..</button>
                         </div>
                     </div>
                 </SwiperSlide>
