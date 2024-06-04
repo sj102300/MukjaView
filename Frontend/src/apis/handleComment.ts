@@ -5,15 +5,13 @@ interface PostCommentProps{
     comment: string;
     oauthIdentifier: string;
     restaurantId: number;
-    profileImg: string;
 }
 
-const postComment = ({ comment, oauthIdentifier, restaurantId, profileImg }: PostCommentProps)=>{
+const postComment = ({ comment, oauthIdentifier, restaurantId }: PostCommentProps)=>{
 
     return axios.post(`https://mukjaview.kro.kr/api/v1/${restaurantId}/comment`, {
         comment: comment,
         oauthIdentifier: oauthIdentifier,
-        profileImg: profileImg
     })
 
 }

@@ -10,6 +10,7 @@ import { Suspense } from 'react';
 import Loading from './components/Loading';
 import ReviewCard from './Review/reviewCard';
 import { ReactQueryDevtools } from 'react-query/devtools'
+import Choose from './Review/choose';
 
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
         } />
 
         <Route path={"/review/:restaurantId"} element={<ReviewCard />} />
+        <Route path={"/review/:restaurantId/choose"} element={<Choose />} />
       </Routes>
       <ReactQueryDevtools />
     </>

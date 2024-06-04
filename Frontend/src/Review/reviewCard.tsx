@@ -8,7 +8,7 @@ import { useQuery } from "react-query";
 import { getDetailRestaurantInfo, getRestaurantTextReview } from "../apis/restaurantsInfo";
 import { UserInfo } from "../SignUp/check";
 import { getUserInfo } from "../apis/userInfo";
-import { useParams, useSearchParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCards } from "swiper/modules";
 
@@ -23,6 +23,18 @@ interface Comment {
     oauthIdentifier: string;
     nickname: string;
     text: string;
+    imgUrl: string;
+    emotion: string;
+    userMukbti: string;
+}
+
+interface Review{
+    review: string;
+    emotion: string;
+    flavorValue: number;
+    moodValue: number;
+    serviceValue: number;
+    reasonable: boolean;
 }
 
 export interface DetailRestaurantInfo {
@@ -89,14 +101,16 @@ export default function ReviewCard() {
 
     let [restaurantTextReview, setRestaurantTextReview] = useState<string>('')
 
-    const restaurantTextReviewQuery = useQuery<string>(
+    const restaurantTextReviewQuery = useQuery<Review>(
         'restaurantTextReview',
         () => getRestaurantTextReview({
             restaurantId: Number(restaurantId),
             mukbti: searchParams.get('mukbti') || userQuery?.data?.mukbti || user?.mukbti || ''
         }),
         {
-            onSuccess: (data)=> setRestaurantTextReview(data)
+            onSuccess: (data)=> {
+                setRestaurantTextReview(data.review);
+            }
         }
     )
 
@@ -152,7 +166,6 @@ export default function ReviewCard() {
     let commentRef = useRef<HTMLInputElement | null>(null)
 
     const { mutate: handleLike } = useHandleLike()
-
     const { mutate: postComment } = usePostComment();
     const { mutate: deleteComment } = useDeleteComment();
 
@@ -161,7 +174,7 @@ export default function ReviewCard() {
         <>
             <div className={styles.header}>
                 <div className={styles.restaurant}>
-                    <img className="w-[30%] h-[84px]" src={detailRestaurantInfo?.thumbnailPictureUrl} alt="썸네일 이미지" />
+                    <img className="w-[115px] h-[84px]" src={detailRestaurantInfo?.thumbnailPictureUrl} alt="썸네일 이미지" />
                     <div className={styles.info}>
                         <h2 className="text-xl font-bold">{detailRestaurantInfo?.restaurantName}</h2>
                         <h3 className="font-semibold">{detailRestaurantInfo?.address.substring(7)}</h3>
@@ -191,7 +204,7 @@ export default function ReviewCard() {
                         </div>
                         <TbLocationShare size={'27'} color={'ff6c1a'} />
                     </div>
-                    <div className={styles.more}>다른 캐릭터의 리뷰 더보기 &gt;&gt;</div>
+                    <Link to={`/review/${restaurantId}/choose`}><div className={styles.more}>다른 캐릭터의 리뷰 더보기 &gt;&gt;</div></Link>
                 </div>
             </div>
 
@@ -232,9 +245,22 @@ export default function ReviewCard() {
                         <div className={styles.comments} >
                             {
                                 detailRestaurantInfo?.comments.map((e) => {
+                                    
+                                    let imgUrl = e.imgUrl;
+                                    if(!imgUrl){
+                                        if(e.emotion === 'positive'){
+                                            imgUrl = `../MBTICharacters/${e.userMukbti}_smile.png`
+                                        } else if (e.emotion === 'negative'){
+                                            imgUrl = `../MBTICharacters/${e.userMukbti}_sad.png`
+                                        }
+                                        else if (e.emotion === 'neutral') {
+                                            imgUrl = `../MBTICharacters/${e.userMukbti}_neutral.png`
+                                        }
+                                    }
+
                                     return (
                                         <div className={styles.comment}>
-                                            <img src={e.nickname} alt="프사" className="w-[50px] h-[50px] rounded-full" />
+                                            <img src={imgUrl} alt="프사" className="w-[50px] h-[50px] rounded-full" />
                                             <p>{e?.text}</p>
                                             {
                                                 e.oauthIdentifier === user?.oauthIdentifier && 
@@ -261,7 +287,6 @@ export default function ReviewCard() {
                                     comment: commentRef?.current?.value || '',
                                     restaurantId: detailRestaurantInfo?.restaurantId || 0,
                                     oauthIdentifier: user?.oauthIdentifier || '',
-                                    profileImg: profileImg,
                                 })
                             }}>게시..</button>
                         </div>

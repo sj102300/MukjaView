@@ -17,6 +17,8 @@ import { getUserInfo } from "../apis/userInfo";
 import { MukbtiAttribute, getMukbtiAttribute } from "../utils/handleMBTI";
 
 
+// https://soccer-programming.tistory.com/40
+
 interface LocationType {
   isAvailable?: boolean;
   latitude: number;
@@ -175,7 +177,6 @@ export function Map() {
 
 
   //키워드 검색 되는지 확인하기
-
   const restaurantsByKeyword = useQuery<Array<RestaurantsInfo>>(
     "restaurantsInfoByKeyword",
     () => getRestaurantsInfobyKeyword(searchValue),
