@@ -224,12 +224,11 @@ export default function ReviewCard() {
     const { mutate: postComment } = usePostComment();
     const { mutate: deleteComment } = useDeleteComment();
 
-
     return (
         <>
             <div className={styles.header}>
                 <div className={styles.restaurant}>
-                    <img className="w-[115px] h-[84px]" src={detailRestaurantInfo?.thumbnailPictureUrl} alt="썸네일 이미지" />
+                    <img className="w-[115px] h-[84px]" src={detailRestaurantInfo?.thumbnailPictureUrl +`&v=${new Date().getTime()}`} alt="썸네일 이미지" />
                     <div className={styles.info}>
                         <h2 className="text-xl font-bold">{detailRestaurantInfo?.restaurantName}</h2>
                         <h3 className="font-semibold">{detailRestaurantInfo?.address.substring(7)}</h3>
@@ -308,7 +307,6 @@ export default function ReviewCard() {
                                             <CartesianGrid strokeDasharray="3 3" />
                                             <XAxis dataKey="name" />
                                             <YAxis />
-                                            <Tooltip isAnimationActive={false} />
                                             <ReferenceLine y={0} stroke="#000" />
                                             <Bar dataKey="value" fill={
                                                 restaurantTextReviewQuery.data?.reasonable ? '#82ca9d' : '#ff7979'
@@ -320,8 +318,7 @@ export default function ReviewCard() {
                                             <p className="">이 식당은 대체로 가성비가 좋은 편이군요!</p>
                                             : <p className="text-center">이 식당은 가격만큼의 퀄리티를 <br /> 보장하는 편이군요!</p>
                                     }
-
-                                </>
+                            </>
                                 : <div data-aos="zoom-in">도표</div>
                         }
                     </div>
