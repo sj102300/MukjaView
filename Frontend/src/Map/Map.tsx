@@ -64,7 +64,7 @@ export function Map() {
   let [randomVariable, setRandomVariable] = useState<number>()
 
   useEffect(()=>{
-    setRandomVariable(Math.random() * 1000 / 100);
+    setRandomVariable(Math.random());
   })
 
   //기본: 세종대학교 대양AI센터

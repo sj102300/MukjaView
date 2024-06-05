@@ -81,7 +81,7 @@ export default function ReviewCard() {
     let [randomVariable, setRandomVariable] = useState<number>();
 
     useEffect(() => {
-        randomVariable = Math.floor(Math.random() * 100) / 10;
+        setRandomVariable(Math.random());
         AOS.init();
     }, [])
 
