@@ -328,7 +328,7 @@ export default function ReviewCard() {
                         <div ref={imagesRef} className={styles.images}>
                             {
                                 detailRestaurantInfo?.detailedPictureList.map((e) => {
-                                    return <img className="w-[120px] h-[120px] object-fill" width={"120px"} height={"120px"} src={e} alt="음식 이미지" />
+                                    return <img className="w-[120px] h-[120px] object-fill" width={"120px"} height={"120px"} src={e + `&v=${new Date().getTime()}`} alt="음식 이미지" />
                                 })
                             }
                         </div>

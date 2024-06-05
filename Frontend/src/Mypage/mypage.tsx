@@ -51,7 +51,7 @@ export default function MyPage() {
                                 return (
                                     <Link to={`/review/${item.restaurantId}`}>
                                         <div key={i} className={styles.wishItem}>
-                                            <img src={item.thumbnailPictureUrl} alt="썸네일 이미지" />
+                                            <img src={item.thumbnailPictureUrl +`&v=${new Date().getTime()}`} alt="썸네일 이미지" />
                                             <div>
                                                 <h2 className="text-lg">{item.restaurantName}</h2>
                                                 <h3 className="text-sm">{item.address}</h3>
