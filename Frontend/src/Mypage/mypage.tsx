@@ -48,6 +48,7 @@ export default function MyPage() {
                         wishItems?.data?.length ?
                             (wishItems?.data?.map((item, i) => {
                                 return (
+                                    <Link to={`/review/${item.restaurantId}`}>
                                     <div key={i} className={styles.wishItem}>
                                         <img src={item.thumbnailPictureUrl} alt="썸네일 이미지" />
                                         <div>
@@ -56,6 +57,7 @@ export default function MyPage() {
                                         </div>
                                         <IoArrowRedoOutline color="ff6c1a" size={"45"} />
                                     </div>
+                                    </Link>
                                 )
                             }))
                             : <div className="mx-auto my-1 text-gray-500">비어있어요!!</div>

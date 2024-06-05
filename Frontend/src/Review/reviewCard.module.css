@@ -152,6 +152,13 @@ mark {
     border-radius: 20px;
 }
 
+.fitMukbti{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap:5px;
+}
+
 .secondCard {
     width: 100%;
     height: 100%;

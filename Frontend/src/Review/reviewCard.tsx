@@ -18,6 +18,10 @@ import { HiMiniTrash } from "react-icons/hi2";
 import { useHandleLike } from "../apis/handleLike";
 import { useDeleteComment, usePostComment } from "../apis/handleComment";
 
+import React from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine, ResponsiveContainer } from 'recharts';
+import { MukbtiAttribute, getMukbtiAttribute } from "../utils/handleMBTI";
+
 interface Comment {
     commentId: number;
     oauthIdentifier: string;
@@ -28,7 +32,7 @@ interface Comment {
     userMukbti: string;
 }
 
-interface Review{
+interface Review {
     review: string;
     emotion: string;
     flavorValue: number;
@@ -54,12 +58,26 @@ export interface DetailRestaurantInfo {
     like: boolean;
 }
 
+interface ChartData {
+    name: string;
+    value: number;
+}
+
+interface MukbtiIntro {
+    text: string;
+    imgUrl: string;
+    name: string;
+    taste: string;
+    title: string;
+}
+
 export default function ReviewCard() {
 
     let { restaurantId } = useParams();
     let [searchParams, setSearchParams] = useSearchParams();
 
     let [user, setUser] = useState<UserInfo>()
+    let [chartData, setChartData] = useState<Array<ChartData>>();
 
     useEffect(() => {
         AOS.init();
@@ -69,13 +87,13 @@ export default function ReviewCard() {
         "userInfo",
         getUserInfo,
         {
-            onSuccess: (data)=> setUser(data)
+            onSuccess: (data) => setUser(data)
         }
     );
 
     let [profileImg, setProfileImg] = useState<string>('');
-
     let [detailRestaurantInfo, setDetailRestaurantInfo] = useState<DetailRestaurantInfo>();
+    let [fitMukbti, setFitMukbti] = useState<MukbtiAttribute>();
 
     const detailRestaurantInfoQuery = useQuery<DetailRestaurantInfo>(
         'detailRestaurantInfo',
@@ -87,19 +105,22 @@ export default function ReviewCard() {
             onSuccess: (data) => {
                 setDetailRestaurantInfo(data);
                 if (data.emotion === 'positive') {
-                    setProfileImg(user?.smileImageUrl || `../MBTICharacters/${user?.mukbti}_smile.png`);
+                    setProfileImg(user?.smileImageUrl || `/MBTICharacters/${user?.mukbti}_smile.png`);
                 }
                 else if (data.emotion === 'neutral') {
-                    setProfileImg(user?.neutralImageUrl || `../MBTICharacters/${user?.mukbti}_neutral.png`)
+                    setProfileImg(user?.neutralImageUrl || `/MBTICharacters/${user?.mukbti}_neutral.png`)
                 }
                 else if (data.emotion === 'negative') {
-                    setProfileImg(user?.sadImageUrl || `../MBTICharacters/${user?.mukbti}_sad.png`)
+                    setProfileImg(user?.sadImageUrl || `/MBTICharacters/${user?.mukbti}_sad.png`)
                 }
+                setFitMukbti(getMukbtiAttribute(data.fitMukbti))
             }
         }
     )
 
     let [restaurantTextReview, setRestaurantTextReview] = useState<string>('')
+
+    let [mukbtiIntro, setMukbtiIntro] = useState<MukbtiIntro>()
 
     const restaurantTextReviewQuery = useQuery<Review>(
         'restaurantTextReview',
@@ -108,8 +129,43 @@ export default function ReviewCard() {
             mukbti: searchParams.get('mukbti') || userQuery?.data?.mukbti || user?.mukbti || ''
         }),
         {
-            onSuccess: (data)=> {
+            onSuccess: (data) => {
                 setRestaurantTextReview(data.review);
+                setChartData([
+                    { name: '맛', value: data.flavorValue },
+                    { name: '서비스', value: data.serviceValue },
+                    { name: '분위기', value: data.moodValue },
+                ])
+                let tmp = getMukbtiAttribute(searchParams.get('mukbti') || '')
+                if(tmp){
+                    if (data.emotion === 'positive'){
+                        setMukbtiIntro({
+                            text: "이 먹BTI와는 궁합이 좋은 식당이군요!",
+                            imgUrl: tmp.smileImageUrl,
+                            name: tmp.name,
+                            taste: tmp.taste,
+                            title: tmp.title
+                        })
+                    }else if (data.emotion === 'negative'){
+                        setMukbtiIntro({
+                            text: "이 먹BTI와는 어울리지 않는 식당이네요 ㅠ.ㅠ",
+                            imgUrl: getMukbtiAttribute(searchParams.get('mukbti') || '').sadImageUrl,
+                            name: tmp.name,
+                            taste: tmp.taste,
+                            title: tmp.title
+                        })
+                    }
+                    else if (data.emotion === 'neutral'){
+                        setMukbtiIntro({
+                            text: "이 먹BTI에게는 중립적인 식당입니다!",
+                            imgUrl: getMukbtiAttribute(searchParams.get('mukbti') || '').neutralImageUrl,
+                            name: tmp.name,
+                            taste: tmp.taste,
+                            title: tmp.title
+                        })
+                    }
+                }
+                
             }
         }
     )
@@ -218,14 +274,60 @@ export default function ReviewCard() {
                     perSlideRotate: 1.5,
                     slideShadows: false,
                 }}
-
             >
                 <SwiperSlide>
                     <div className={styles.firstCard}>
-                        <div data-aos="zoom-in">도표</div>
-                        <div data-aos="zoom-in">
-                            <img width={'200px'} height={'200px'} data-aos="zoom-in" src={`../MBTICharacters/${detailRestaurantInfo?.fitMukbti}_smile.png`} alt="추천 먹비티아이 캐릭터" />
+                        <div data-aos="zoom-in" className={styles.fitMukbti}>
+                            {
+                                searchParams.get('mukbti') ?
+                                    <>
+                                        <p className="w-4/5 text-center break-keep text-lg font-semibold">{mukbtiIntro?.text}</p>
+                                        <img width={'200px'} height={'200px'} data-aos="zoom-in" src={mukbtiIntro?.imgUrl} alt="추천 먹비티아이 캐릭터" />
+                                        <p >{mukbtiIntro?.title}({mukbtiIntro?.name})</p>
+                                        <h3 className="text-xl font-semibold">{mukbtiIntro?.taste}</h3>
+                                    </>
+                                    :
+                                    <>                                    
+                                        <p className="text-lg font-semibold">이 먹BTI에게 가장 추천합니다!</p>
+                                        <img width={'200px'} height={'200px'} data-aos="zoom-in" src={`/MBTICharacters/${detailRestaurantInfo?.fitMukbti}_smile.png`} alt="추천 먹비티아이 캐릭터" />
+                                        <p >{fitMukbti?.title}({fitMukbti?.name})</p>
+                                        <h3 className="text-xl font-semibold">{fitMukbti?.taste}</h3>
+                                    </>
+
+                            }
                         </div>
+                    </div>
+
+                </SwiperSlide>
+                <SwiperSlide>
+                    <div className={styles.firstCard}>
+                        {
+                            chartData ?
+                                <>
+                                    <p className="text-lg font-semibold">수치는 다음과 같습니다!</p>
+                                    <ResponsiveContainer className="relative left-[-7%]" data-aos="zoom-in" width={"80%"} height={"50%"}>
+                                        <BarChart
+                                            data={chartData}
+                                        >
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis dataKey="name" />
+                                            <YAxis />
+                                            <Tooltip />
+                                            <ReferenceLine y={0} stroke="#000" />
+                                            <Bar dataKey="value" fill={
+                                                restaurantTextReviewQuery.data?.reasonable ? '#82ca9d' : '#ff7979'
+                                            } />
+                                        </BarChart>
+                                    </ResponsiveContainer>
+                                    {
+                                        restaurantTextReviewQuery.data?.reasonable ?
+                                            <p className="">이 식당은 대체로 가성비가 좋은 편이군요!</p>
+                                            : <p className="text-center">이 식당은 가격만큼의 퀄리티를 <br /> 보장하는 편이군요!</p>
+                                    }
+
+                                </>
+                                : <div data-aos="zoom-in">도표</div>
+                        }
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
@@ -245,16 +347,16 @@ export default function ReviewCard() {
                         <div className={styles.comments} >
                             {
                                 detailRestaurantInfo?.comments.map((e) => {
-                                    
+
                                     let imgUrl = e.imgUrl;
-                                    if(!imgUrl){
-                                        if(e.emotion === 'positive'){
-                                            imgUrl = `../MBTICharacters/${e.userMukbti}_smile.png`
-                                        } else if (e.emotion === 'negative'){
-                                            imgUrl = `../MBTICharacters/${e.userMukbti}_sad.png`
+                                    if (!imgUrl) {
+                                        if (e.emotion === 'positive') {
+                                            imgUrl = `/MBTICharacters/${e.userMukbti}_smile.png`
+                                        } else if (e.emotion === 'negative') {
+                                            imgUrl = `/MBTICharacters/${e.userMukbti}_sad.png`
                                         }
                                         else if (e.emotion === 'neutral') {
-                                            imgUrl = `../MBTICharacters/${e.userMukbti}_neutral.png`
+                                            imgUrl = `/MBTICharacters/${e.userMukbti}_neutral.png`
                                         }
                                     }
 
@@ -263,15 +365,14 @@ export default function ReviewCard() {
                                             <img src={imgUrl} alt="프사" className="w-[50px] h-[50px] rounded-full" />
                                             <p>{e?.text}</p>
                                             {
-                                                e.oauthIdentifier === user?.oauthIdentifier && 
-                                                <div onClick={()=>{
+                                                e.oauthIdentifier === user?.oauthIdentifier &&
+                                                <div onClick={() => {
                                                     deleteComment({
                                                         commentId: e.commentId,
                                                         oauthIdentifier: e.oauthIdentifier,
                                                         restaurantId: detailRestaurantInfo?.restaurantId,
                                                     })
                                                 }}><HiMiniTrash className="mt-2" size={'16'} color={'gray'} /></div>
-
                                             }
                                         </div>
                                     )
@@ -282,7 +383,7 @@ export default function ReviewCard() {
                         <div className={styles.commentInput}>
                             <img src={profileImg} alt="프사" className="w-[50px] h-[50px] rounded-full" />
                             <input ref={commentRef} name="commentText" type="text" placeholder="댓글.." />
-                            <button onClick={()=>{
+                            <button onClick={() => {
                                 postComment({
                                     comment: commentRef?.current?.value || '',
                                     restaurantId: detailRestaurantInfo?.restaurantId || 0,
