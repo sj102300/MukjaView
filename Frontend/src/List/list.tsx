@@ -18,6 +18,13 @@ interface RestaurantsItemObj {
 
 export default function List() {
 
+
+    let [randomVariable, setRandomVariable] = useState<number>();
+
+    useEffect(()=>{
+        setRandomVariable(Math.random());
+    },[])
+
     let [searchOption, setSearchOption] = useState<'tag' | 'keyword'>('keyword');
     let [searchValue, setSearchValue] = useState<string>('');
 
@@ -74,7 +81,7 @@ export default function List() {
                     restaurants?.map((item, i) => {
                         return (
                             <div onClick={() => navigate(`/review/${item.restaurantId}`)} key={i} className={styles.listItem}>
-                                <img src={item.thumbnailPictureUrl +`&v=${Math.random() * 100 / 10}`} alt="썸네일 이미지" />
+                                <img src={item.thumbnailPictureUrl +`&v=${randomVariable}`} alt="썸네일 이미지" />
                                 <div>
                                     <h2 className="text-lg">{item.restaurantName}</h2>
                                     <h3 className="text-sm">{item.address}</h3>

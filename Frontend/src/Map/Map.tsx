@@ -61,6 +61,12 @@ export function Map() {
 
   let navigate = useNavigate();
 
+  let [randomVariable, setRandomVariable] = useState<number>()
+
+  useEffect(()=>{
+    setRandomVariable(Math.random() * 1000 / 100);
+  })
+
   //기본: 세종대학교 대양AI센터
   let [myLocation, setMyLocation] = useState<LocationType>({
     isAvailable: false,
@@ -277,7 +283,7 @@ export function Map() {
                   content: renderToString(
                     <PreviewRestaurant
                       id={previewRestaurant.restaurantId}
-                      thumbnailPictureUrl={previewRestaurant.thumbnailPictureUrl}
+                      thumbnailPictureUrl={previewRestaurant.thumbnailPictureUrl + `&v=${randomVariable}`}
                       restaurantName={previewRestaurant.restaurantName}
                       address={previewRestaurant.address}
                       tags={previewRestaurant.tags}

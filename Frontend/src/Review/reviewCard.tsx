@@ -78,7 +78,10 @@ export default function ReviewCard() {
     let [user, setUser] = useState<UserInfo>()
     let [chartData, setChartData] = useState<Array<ChartData>>();
 
+    let [randomVariable, setRandomVariable] = useState<number>();
+
     useEffect(() => {
+        randomVariable = Math.floor(Math.random() * 100) / 10;
         AOS.init();
     }, [])
 
@@ -228,7 +231,7 @@ export default function ReviewCard() {
         <>
             <div className={styles.header}>
                 <div className={styles.restaurant}>
-                    <img className="w-[115px] h-[84px]" src={detailRestaurantInfo?.thumbnailPictureUrl + `&v=${Math.random() * 100 / 10}`} alt="썸네일 이미지" />
+                    <img className="w-[115px] h-[84px]" src={detailRestaurantInfo?.thumbnailPictureUrl + `&v=${randomVariable}`} alt="썸네일 이미지" />
                     <div className={styles.info}>
                         <h2 className="text-xl font-bold">{detailRestaurantInfo?.restaurantName}</h2>
                         <h3 className="font-semibold">{detailRestaurantInfo?.address.substring(7)}</h3>
@@ -328,7 +331,7 @@ export default function ReviewCard() {
                         <div ref={imagesRef} className={styles.images}>
                             {
                                 detailRestaurantInfo?.detailedPictureList.map((e) => {
-                                    return <img className="w-[120px] h-[120px] object-fill" width={"120px"} height={"120px"} src={e + `&v=${Math.random() * 100 / 10}`} alt="음식 이미지" />
+                                    return <img className="w-[120px] h-[120px] object-fill" width={"120px"} height={"120px"} src={e + `&v=${randomVariable}`} alt="음식 이미지" />
                                 })
                             }
                         </div>
