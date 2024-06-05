@@ -136,8 +136,8 @@ export default function ReviewCard() {
                     { name: '분위기', value: Math.round(data.moodValue * 1000) / 1000 },
                 ])
                 let tmp = getMukbtiAttribute(searchParams.get('mukbti') || '')
-                if(tmp){
-                    if (data.emotion === 'positive'){
+                if (tmp) {
+                    if (data.emotion === 'positive') {
                         setMukbtiIntro({
                             text: "이 먹BTI와는 궁합이 좋은 식당이군요!",
                             imgUrl: tmp.smileImageUrl,
@@ -145,7 +145,7 @@ export default function ReviewCard() {
                             taste: tmp.taste,
                             title: tmp.title
                         })
-                    }else if (data.emotion === 'negative'){
+                    } else if (data.emotion === 'negative') {
                         setMukbtiIntro({
                             text: "이 먹BTI와는 어울리지 않는 식당이네요 ㅠ.ㅠ",
                             imgUrl: getMukbtiAttribute(searchParams.get('mukbti') || '').sadImageUrl,
@@ -154,7 +154,7 @@ export default function ReviewCard() {
                             title: tmp.title
                         })
                     }
-                    else if (data.emotion === 'neutral'){
+                    else if (data.emotion === 'neutral') {
                         setMukbtiIntro({
                             text: "이 먹BTI에게는 중립적인 식당입니다!",
                             imgUrl: getMukbtiAttribute(searchParams.get('mukbti') || '').neutralImageUrl,
@@ -164,7 +164,7 @@ export default function ReviewCard() {
                         })
                     }
                 }
-                
+
             }
         }
     )
@@ -283,7 +283,7 @@ export default function ReviewCard() {
                                         <h3 className="text-xl font-semibold">{mukbtiIntro?.taste}</h3>
                                     </>
                                     :
-                                    <>                                    
+                                    <>
                                         <p className="text-lg font-semibold">이 먹BTI에게 가장 추천합니다!</p>
                                         <img width={'200px'} height={'200px'} data-aos="zoom-in" src={`/MBTICharacters/${detailRestaurantInfo?.fitMukbti}_smile.png`} alt="추천 먹비티아이 캐릭터" />
                                         <p >{fitMukbti?.title}({fitMukbti?.name})</p>
@@ -308,7 +308,7 @@ export default function ReviewCard() {
                                             <CartesianGrid strokeDasharray="3 3" />
                                             <XAxis dataKey="name" />
                                             <YAxis />
-                                            <Tooltip cursor={false} />
+                                            <Tooltip isAnimationActive={false} />
                                             <ReferenceLine y={0} stroke="#000" />
                                             <Bar dataKey="value" fill={
                                                 restaurantTextReviewQuery.data?.reasonable ? '#82ca9d' : '#ff7979'
@@ -385,7 +385,7 @@ export default function ReviewCard() {
                                 })
                                 if (commentRef.current) {
                                     commentRef.current.value = '';
-                                  }
+                                }
                             }}>게시..</button>
                         </div>
                     </div>
