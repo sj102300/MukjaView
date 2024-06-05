@@ -65,7 +65,7 @@ export function Map() {
 
   useEffect(()=>{
     setRandomVariable(Math.random());
-  })
+  },[])
 
   //기본: 세종대학교 대양AI센터
   let [myLocation, setMyLocation] = useState<LocationType>({
