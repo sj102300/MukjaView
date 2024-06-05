@@ -18,7 +18,6 @@ import { HiMiniTrash } from "react-icons/hi2";
 import { useHandleLike } from "../apis/handleLike";
 import { useDeleteComment, usePostComment } from "../apis/handleComment";
 
-import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine, ResponsiveContainer } from 'recharts';
 import { MukbtiAttribute, getMukbtiAttribute } from "../utils/handleMBTI";
 
@@ -132,9 +131,9 @@ export default function ReviewCard() {
             onSuccess: (data) => {
                 setRestaurantTextReview(data.review);
                 setChartData([
-                    { name: '맛', value: data.flavorValue },
-                    { name: '서비스', value: data.serviceValue },
-                    { name: '분위기', value: data.moodValue },
+                    { name: '맛', value: Math.round(data.flavorValue * 1000) / 1000 },
+                    { name: '서비스', value: Math.round(data.serviceValue * 1000) / 1000 },
+                    { name: '분위기', value: Math.round(data.moodValue * 1000) / 1000 },
                 ])
                 let tmp = getMukbtiAttribute(searchParams.get('mukbti') || '')
                 if(tmp){
@@ -243,7 +242,6 @@ export default function ReviewCard() {
                 </div>
                 <div className={styles.icons}>
                     <div className="flex flex-row gap-[5px] ">
-                        {/* 여기 Post 요청 끝나기를 기다리는것때문에,, 하트 바뀌는게 좀 느리다.. */}
                         <div onClick={() => {
                             handleLike({
                                 like: detailRestaurantInfo?.like || false,
@@ -255,10 +253,8 @@ export default function ReviewCard() {
                                 detailRestaurantInfo?.like ?
                                     <TbHeartFilled size={"27"} color={"ff6c1a"} />
                                     : <TbHeart size={"27"} color={"ff6c1a"} />
-
                             }
                         </div>
-                        <TbLocationShare size={'27'} color={'ff6c1a'} />
                     </div>
                     <Link to={`/review/${restaurantId}/choose`}><div className={styles.more}>다른 캐릭터의 리뷰 더보기 &gt;&gt;</div></Link>
                 </div>
@@ -270,7 +266,7 @@ export default function ReviewCard() {
                 modules={[EffectCards]}
                 className={styles.swiperContainer}
                 cardsEffect={{
-                    perSlideOffset: 4,
+                    perSlideOffset: 3,
                     perSlideRotate: 1.5,
                     slideShadows: false,
                 }}
@@ -312,7 +308,7 @@ export default function ReviewCard() {
                                             <CartesianGrid strokeDasharray="3 3" />
                                             <XAxis dataKey="name" />
                                             <YAxis />
-                                            <Tooltip />
+                                            <Tooltip cursor={false} />
                                             <ReferenceLine y={0} stroke="#000" />
                                             <Bar dataKey="value" fill={
                                                 restaurantTextReviewQuery.data?.reasonable ? '#82ca9d' : '#ff7979'
@@ -347,7 +343,6 @@ export default function ReviewCard() {
                         <div className={styles.comments} >
                             {
                                 detailRestaurantInfo?.comments.map((e) => {
-
                                     let imgUrl = e.imgUrl;
                                     if (!imgUrl) {
                                         if (e.emotion === 'positive') {
@@ -359,7 +354,6 @@ export default function ReviewCard() {
                                             imgUrl = `/MBTICharacters/${e.userMukbti}_neutral.png`
                                         }
                                     }
-
                                     return (
                                         <div className={styles.comment}>
                                             <img src={imgUrl} alt="프사" className="w-[50px] h-[50px] rounded-full" />
@@ -389,6 +383,9 @@ export default function ReviewCard() {
                                     restaurantId: detailRestaurantInfo?.restaurantId || 0,
                                     oauthIdentifier: user?.oauthIdentifier || '',
                                 })
+                                if (commentRef.current) {
+                                    commentRef.current.value = '';
+                                  }
                             }}>게시..</button>
                         </div>
                     </div>

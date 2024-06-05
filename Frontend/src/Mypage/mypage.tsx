@@ -1,6 +1,6 @@
 import NavBar from "../components/NavBar";
 import styles from "./mypage.module.css"
-import { IoArrowRedoOutline, IoSettingsOutline } from "react-icons/io5";
+import { IoSettingsOutline } from "react-icons/io5";
 import { useQuery } from "react-query";
 import { MukbtiAttribute, getMukbtiAttribute } from "../utils/handleMBTI";
 import { getUserInfo, getWishItems } from "../apis/userInfo";
@@ -8,6 +8,7 @@ import { UserInfo } from "../SignUp/check";
 import Loading from "../components/Loading";
 import { Link } from "react-router-dom";
 import { RestaurantsInfo } from "../Map/Map";
+import { IoIosArrowForward } from "react-icons/io";
 
 
 export default function MyPage() {
@@ -19,14 +20,14 @@ export default function MyPage() {
 
     const mukbtiAttribute = useQuery<MukbtiAttribute>(
         "mukbtiAttribute",
-        ()=> getMukbtiAttribute(user.data?.mukbti || '')
+        () => getMukbtiAttribute(user.data?.mukbti || '')
     )
 
     const wishItems = useQuery<Array<RestaurantsInfo>>(
         'wishItems',
-        ()=>getWishItems(user?.data?.oauthIdentifier || '')
+        () => getWishItems(user?.data?.oauthIdentifier || '')
     )
-    
+
 
     if (user.isLoading) return <Loading />;
 
@@ -49,14 +50,14 @@ export default function MyPage() {
                             (wishItems?.data?.map((item, i) => {
                                 return (
                                     <Link to={`/review/${item.restaurantId}`}>
-                                    <div key={i} className={styles.wishItem}>
-                                        <img src={item.thumbnailPictureUrl} alt="썸네일 이미지" />
-                                        <div>
-                                            <h2 className="text-lg">{item.restaurantName}</h2>
-                                            <h3 className="text-sm">{item.address}</h3>
+                                        <div key={i} className={styles.wishItem}>
+                                            <img src={item.thumbnailPictureUrl} alt="썸네일 이미지" />
+                                            <div>
+                                                <h2 className="text-lg">{item.restaurantName}</h2>
+                                                <h3 className="text-sm">{item.address}</h3>
+                                            </div>
+                                            <IoIosArrowForward color="ff6c1a" size={"45"} />
                                         </div>
-                                        <IoArrowRedoOutline color="ff6c1a" size={"45"} />
-                                    </div>
                                     </Link>
                                 )
                             }))

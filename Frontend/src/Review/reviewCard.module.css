@@ -241,6 +241,7 @@ mark {
 .commentInput>input {
     font-size: small;
     height: 30px;
+    width:100%;
 }
 
 .commentInput>button {
