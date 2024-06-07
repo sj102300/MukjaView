@@ -10,7 +10,7 @@ export default function Intro() {
             {/* <Link className={styles.googleBtn} to="https://mukjaview.kro.kr/oauth2/authorization/google?redirect_uri=http://localhost:3000/signup"> */}
                 <Link to="https://mukjaview.kro.kr/oauth2/authorization/google?redirect_uri=https://mukjaview.kro.kr/signup">
                 <div className={styles.icon}>
-                    <img src="/g-logo.png" alt="Google icon" />
+                    <img width={"30px"} height={"30px"} src="/g-logo.png" alt="Google icon" />
                 </div>
                 구글로 시작하기
             </Link>

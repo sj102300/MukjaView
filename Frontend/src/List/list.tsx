@@ -73,6 +73,10 @@ export default function List() {
     }
     let navigate = useNavigate();
 
+    const LazyImage: React.FC<{ src: string; alt: string }> = ({ src, alt }) => {
+        return <img src={src} alt={alt} loading="lazy" />;
+      };
+
     return (
         <>
             <div className={styles.searchBar}><Search searchStart={searchStart} setSearchOption={setSearchOption} setSearchValue={setSearchValue} /></div>
@@ -81,7 +85,8 @@ export default function List() {
                     restaurants?.map((item, i) => {
                         return (
                             <div onClick={() => navigate(`/review/${item.restaurantId}`)} key={i} className={styles.listItem}>
-                                <img src={item.thumbnailPictureUrl +`&v=${randomVariable}`} alt="썸네일 이미지" />
+                                <LazyImage src={item.thumbnailPictureUrl +`&v=${randomVariable}`} alt="썸네일 이미지" />
+                                {/* <img src={item.thumbnailPictureUrl +`&v=${randomVariable}`} alt="썸네일 이미지" /> */}
                                 <div>
                                     <h2 className="text-lg">{item.restaurantName}</h2>
                                     <h3 className="text-sm">{item.address}</h3>
