@@ -17,7 +17,7 @@ export default function MyPage() {
     let [randomVariable, setRandomVariable] = useState<number>(0);
 
     useEffect(()=>{
-        // setRandomVariable(Math.random())
+        setRandomVariable(Math.random())
     },[])
 
     const user = useQuery<UserInfo>(

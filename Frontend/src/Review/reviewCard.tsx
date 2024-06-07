@@ -80,20 +80,16 @@ export default function ReviewCard() {
     let [randomVariable, setRandomVariable] = useState<number>(0);
 
     useEffect(() => {
-        // setRandomVariable(Math.random());
+        setRandomVariable(Math.random());
         AOS.init();
     }, [])
 
     const user = useQuery<UserInfo>(
         "userInfo",
         getUserInfo,
-        {
-            // onSuccess: (data) => console.log(data)
-        }
     );
 
     let [profileImg, setProfileImg] = useState<string>('');
-    // let [detailRestaurantInfo, setDetailRestaurantInfo] = useState<DetailRestaurantInfo>();
     let [fitMukbti, setFitMukbti] = useState<MukbtiAttribute>();
 
     const detailRestaurantInfo = useQuery<DetailRestaurantInfo>(
@@ -105,7 +101,6 @@ export default function ReviewCard() {
         {
             enabled: !!user,
             onSuccess: (data) => {
-                // setDetailRestaurantInfo(data);
                 if (data.emotion === 'positive') {
                     setProfileImg(user?.data?.smileImageUrl || `/MBTICharacters/${user?.data?.mukbti}_smile.png`);
                 }
@@ -120,8 +115,6 @@ export default function ReviewCard() {
         }
     )
 
-    // let [restaurantTextReview, setRestaurantTextReview] = useState<string>('')
-
     let [mukbtiIntro, setMukbtiIntro] = useState<MukbtiIntro>()
 
     const restaurantTextReview = useQuery<Review>(
@@ -133,7 +126,6 @@ export default function ReviewCard() {
         {
             enabled: !!user,
             onSuccess: (data) => {
-                // setRestaurantTextReview(data.review);
                 setChartData([
                     { name: '맛', value: Math.round(data.flavorValue * 1000) / 1000 },
                     { name: '서비스', value: Math.round(data.serviceValue * 1000) / 1000 },

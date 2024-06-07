@@ -64,7 +64,7 @@ export function Map() {
   let [randomVariable, setRandomVariable] = useState<number>(0)
 
   useEffect(()=>{
-    // setRandomVariable(Math.random());
+    setRandomVariable(Math.random());
   },[])
 
   //기본: 세종대학교 대양AI센터
