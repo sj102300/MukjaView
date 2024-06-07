@@ -61,10 +61,10 @@ export function Map() {
 
   let navigate = useNavigate();
 
-  let [randomVariable, setRandomVariable] = useState<number>()
+  let [randomVariable, setRandomVariable] = useState<number>(0)
 
   useEffect(()=>{
-    setRandomVariable(Math.random());
+    // setRandomVariable(Math.random());
   },[])
 
   //기본: 세종대학교 대양AI센터

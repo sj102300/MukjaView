@@ -14,10 +14,10 @@ import { useEffect, useState } from "react";
 
 export default function MyPage() {
 
-    let [randomVariable, setRandomVariable] = useState<number>();
+    let [randomVariable, setRandomVariable] = useState<number>(0);
 
     useEffect(()=>{
-        setRandomVariable(Math.random())
+        // setRandomVariable(Math.random())
     },[])
 
     const user = useQuery<UserInfo>(
@@ -26,13 +26,19 @@ export default function MyPage() {
     );
 
     const mukbtiAttribute = useQuery<MukbtiAttribute>(
-        "mukbtiAttribute",
-        () => getMukbtiAttribute(user.data?.mukbti || '')
+        ["mukbtiAttribute", user?.data?.mukbti],
+        () => getMukbtiAttribute(user.data?.mukbti || ''),
+        {
+            enabled: !!user,
+        }
     )
 
     const wishItems = useQuery<Array<RestaurantsInfo>>(
-        'wishItems',
-        () => getWishItems(user?.data?.oauthIdentifier || '')
+        ['wishItems', user?.data?.oauthIdentifier],
+        () => getWishItems(user?.data?.oauthIdentifier || ''),
+        {
+            enabled: !!user,
+        }
     )
 
 

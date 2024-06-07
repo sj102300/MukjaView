@@ -75,64 +75,65 @@ export default function ReviewCard() {
     let { restaurantId } = useParams();
     let [searchParams, setSearchParams] = useSearchParams();
 
-    let [user, setUser] = useState<UserInfo>()
     let [chartData, setChartData] = useState<Array<ChartData>>();
 
-    let [randomVariable, setRandomVariable] = useState<number>();
+    let [randomVariable, setRandomVariable] = useState<number>(0);
 
     useEffect(() => {
-        setRandomVariable(Math.random());
+        // setRandomVariable(Math.random());
         AOS.init();
     }, [])
 
-    const userQuery = useQuery<UserInfo>(
+    const user = useQuery<UserInfo>(
         "userInfo",
         getUserInfo,
         {
-            onSuccess: (data) => setUser(data)
+            // onSuccess: (data) => console.log(data)
         }
     );
 
     let [profileImg, setProfileImg] = useState<string>('');
-    let [detailRestaurantInfo, setDetailRestaurantInfo] = useState<DetailRestaurantInfo>();
+    // let [detailRestaurantInfo, setDetailRestaurantInfo] = useState<DetailRestaurantInfo>();
     let [fitMukbti, setFitMukbti] = useState<MukbtiAttribute>();
 
-    const detailRestaurantInfoQuery = useQuery<DetailRestaurantInfo>(
-        'detailRestaurantInfo',
+    const detailRestaurantInfo = useQuery<DetailRestaurantInfo>(
+        ['detailRestaurantInfo', user?.data?.oauthIdentifier],
         () => getDetailRestaurantInfo({
             restaurantId: Number(restaurantId),
-            oauthIdentifier: user?.oauthIdentifier || userQuery?.data?.oauthIdentifier || ''
+            oauthIdentifier: user?.data?.oauthIdentifier || ''
         }),
         {
+            enabled: !!user,
             onSuccess: (data) => {
-                setDetailRestaurantInfo(data);
+                // setDetailRestaurantInfo(data);
                 if (data.emotion === 'positive') {
-                    setProfileImg(user?.smileImageUrl || `/MBTICharacters/${user?.mukbti}_smile.png`);
+                    setProfileImg(user?.data?.smileImageUrl || `/MBTICharacters/${user?.data?.mukbti}_smile.png`);
                 }
                 else if (data.emotion === 'neutral') {
-                    setProfileImg(user?.neutralImageUrl || `/MBTICharacters/${user?.mukbti}_neutral.png`)
+                    setProfileImg(user?.data?.neutralImageUrl || `/MBTICharacters/${user?.data?.mukbti}_neutral.png`)
                 }
                 else if (data.emotion === 'negative') {
-                    setProfileImg(user?.sadImageUrl || `/MBTICharacters/${user?.mukbti}_sad.png`)
+                    setProfileImg(user?.data?.sadImageUrl || `/MBTICharacters/${user?.data?.mukbti}_sad.png`)
                 }
                 setFitMukbti(getMukbtiAttribute(data.fitMukbti))
             }
         }
     )
 
-    let [restaurantTextReview, setRestaurantTextReview] = useState<string>('')
+    // let [restaurantTextReview, setRestaurantTextReview] = useState<string>('')
 
     let [mukbtiIntro, setMukbtiIntro] = useState<MukbtiIntro>()
 
-    const restaurantTextReviewQuery = useQuery<Review>(
-        'restaurantTextReview',
+    const restaurantTextReview = useQuery<Review>(
+        ['restaurantTextReview', searchParams.get('mukbti') || user?.data?.mukbti],
         () => getRestaurantTextReview({
             restaurantId: Number(restaurantId),
-            mukbti: searchParams.get('mukbti') || userQuery?.data?.mukbti || user?.mukbti || ''
+            mukbti: searchParams.get('mukbti') || user?.data?.mukbti || ''
         }),
         {
+            enabled: !!user,
             onSuccess: (data) => {
-                setRestaurantTextReview(data.review);
+                // setRestaurantTextReview(data.review);
                 setChartData([
                     { name: '맛', value: Math.round(data.flavorValue * 1000) / 1000 },
                     { name: '서비스', value: Math.round(data.serviceValue * 1000) / 1000 },
@@ -231,13 +232,13 @@ export default function ReviewCard() {
         <>
             <div className={styles.header}>
                 <div className={styles.restaurant}>
-                    <img className="w-[115px] h-[84px]" src={detailRestaurantInfo?.thumbnailPictureUrl + `&v=${randomVariable}`} alt="썸네일 이미지" />
+                    <img className="w-[115px] h-[84px]" src={detailRestaurantInfo?.data?.thumbnailPictureUrl + `&v=${randomVariable}`} alt="썸네일 이미지" />
                     <div className={styles.info}>
-                        <h2 className="text-xl font-bold">{detailRestaurantInfo?.restaurantName}</h2>
-                        <h3 className="font-semibold">{detailRestaurantInfo?.address.substring(7)}</h3>
+                        <h2 className="text-xl font-bold">{detailRestaurantInfo?.data?.restaurantName}</h2>
+                        <h3 className="font-semibold">{detailRestaurantInfo?.data?.address.substring(7)}</h3>
                         <div className={styles.tags} ref={tagsRef}>
                             {
-                                detailRestaurantInfo?.tags.map(e => <div>#{e}</div>)
+                                detailRestaurantInfo?.data?.tags.map(e => <div>#{e}</div>)
                             }
                         </div>
                     </div>
@@ -246,13 +247,13 @@ export default function ReviewCard() {
                     <div className="flex flex-row gap-[5px] ">
                         <div onClick={() => {
                             handleLike({
-                                like: detailRestaurantInfo?.like || false,
-                                oauthIdentifier: user?.oauthIdentifier || '',
-                                restaurantId: detailRestaurantInfo?.restaurantId || 0,
+                                like: detailRestaurantInfo?.data?.like || false,
+                                oauthIdentifier: user?.data?.oauthIdentifier || '',
+                                restaurantId: detailRestaurantInfo?.data?.restaurantId || 0,
                             })
                         }}>
                             {
-                                detailRestaurantInfo?.like ?
+                                detailRestaurantInfo?.data?.like ?
                                     <TbHeartFilled size={"27"} color={"ff6c1a"} />
                                     : <TbHeart size={"27"} color={"ff6c1a"} />
                             }
@@ -287,7 +288,7 @@ export default function ReviewCard() {
                                     :
                                     <>
                                         <p className="text-lg font-semibold">이 먹BTI에게 가장 추천합니다!</p>
-                                        <img width={'200px'} height={'200px'} data-aos="zoom-in" src={`/MBTICharacters/${detailRestaurantInfo?.fitMukbti}_smile.png`} alt="추천 먹비티아이 캐릭터" />
+                                        <img width={'200px'} height={'200px'} data-aos="zoom-in" src={`/MBTICharacters/${detailRestaurantInfo?.data?.fitMukbti}_smile.png`} alt="추천 먹비티아이 캐릭터" />
                                         <p >{fitMukbti?.title}({fitMukbti?.name})</p>
                                         <h3 className="text-xl font-semibold">{fitMukbti?.taste}</h3>
                                     </>
@@ -312,16 +313,16 @@ export default function ReviewCard() {
                                             <YAxis />
                                             <ReferenceLine y={0} stroke="#000" />
                                             <Bar dataKey="value" fill={
-                                                restaurantTextReviewQuery.data?.reasonable ? '#82ca9d' : '#ff7979'
+                                                restaurantTextReview.data?.reasonable ? '#82ca9d' : '#ff7979'
                                             } />
                                         </BarChart>
                                     </ResponsiveContainer>
                                     {
-                                        restaurantTextReviewQuery.data?.reasonable ?
+                                        restaurantTextReview.data?.reasonable ?
                                             <p className="">이 식당은 대체로 가성비가 좋은 편이군요!</p>
                                             : <p className="text-center">이 식당은 가격만큼의 퀄리티를 <br /> 보장하는 편이군요!</p>
                                     }
-                            </>
+                                </>
                                 : <div data-aos="zoom-in">도표</div>
                         }
                     </div>
@@ -330,19 +331,19 @@ export default function ReviewCard() {
                     <div className={styles.secondCard}>
                         <div ref={imagesRef} className={styles.images}>
                             {
-                                detailRestaurantInfo?.detailedPictureList.map((e) => {
+                                detailRestaurantInfo?.data?.detailedPictureList.map((e) => {
                                     return <img className="w-[120px] h-[120px] object-fill" width={"120px"} height={"120px"} src={e + `&v=${randomVariable}`} alt="음식 이미지" />
                                 })
                             }
                         </div>
-                        <div className={styles.reviewTxt} dangerouslySetInnerHTML={{ __html: restaurantTextReview }} />
+                        <div className={styles.reviewTxt} dangerouslySetInnerHTML={{ __html: restaurantTextReview?.data?.review || ''}} />
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className={styles.thirdCard}>
                         <div className={styles.comments} >
                             {
-                                detailRestaurantInfo?.comments.map((e) => {
+                                detailRestaurantInfo?.data?.comments.map((e) => {
                                     let imgUrl = e.imgUrl;
                                     if (!imgUrl) {
                                         if (e.emotion === 'positive') {
@@ -359,12 +360,12 @@ export default function ReviewCard() {
                                             <img src={imgUrl} alt="프사" className="w-[50px] h-[50px] rounded-full" />
                                             <p>{e?.text}</p>
                                             {
-                                                e.oauthIdentifier === user?.oauthIdentifier &&
+                                                e.oauthIdentifier === user?.data?.oauthIdentifier &&
                                                 <div onClick={() => {
                                                     deleteComment({
                                                         commentId: e.commentId,
                                                         oauthIdentifier: e.oauthIdentifier,
-                                                        restaurantId: detailRestaurantInfo?.restaurantId,
+                                                        restaurantId: detailRestaurantInfo?.data?.restaurantId,
                                                     })
                                                 }}><HiMiniTrash className="mt-2" size={'16'} color={'gray'} /></div>
                                             }
@@ -380,8 +381,8 @@ export default function ReviewCard() {
                             <button onClick={() => {
                                 postComment({
                                     comment: commentRef?.current?.value || '',
-                                    restaurantId: detailRestaurantInfo?.restaurantId || 0,
-                                    oauthIdentifier: user?.oauthIdentifier || '',
+                                    restaurantId: detailRestaurantInfo?.data?.restaurantId || 0,
+                                    oauthIdentifier: user?.data?.oauthIdentifier || '',
                                 })
                                 if (commentRef.current) {
                                     commentRef.current.value = '';

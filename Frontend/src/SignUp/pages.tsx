@@ -97,10 +97,11 @@ export function ThirdPage({ selectedFile, previewUrl }: ThirdPageProps) {
           let formData = new FormData();
           formData.append('image', selectedFile);
     
-          axios.post('https://mukjaview.kro.kr/api/upload', formData)
-            .then((response) => {
-              console.log(response);
-            })
+        //   axios.post('https://mukjaview.kro.kr/upload', formData)
+        //     .then((response) => {
+        //       console.log(response.data);
+        //     //   setSmile
+        //     })
         }
       }
 

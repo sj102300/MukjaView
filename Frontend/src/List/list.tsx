@@ -7,8 +7,8 @@ import styles from "./list.module.css"
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { RestaurantsInfo } from "../Map/Map";
-import { getRestaurantsInfobyCoord, getRestaurantsInfobyKeyword, getRestaurantsInfobyList, getRestaurantsInfobyTag } from "../apis/restaurantsInfo";
-import { Link, useNavigate } from "react-router-dom";
+import { getRestaurantsInfobyKeyword, getRestaurantsInfobyList, getRestaurantsInfobyTag } from "../apis/restaurantsInfo";
+import { useNavigate } from "react-router-dom";
 
 interface RestaurantsItemObj {
     thumbnail: string;
@@ -19,10 +19,10 @@ interface RestaurantsItemObj {
 export default function List() {
 
 
-    let [randomVariable, setRandomVariable] = useState<number>();
+    let [randomVariable, setRandomVariable] = useState<number>(0);
 
     useEffect(()=>{
-        setRandomVariable(Math.random());
+        // setRandomVariable(Math.random());
     },[])
 
     let [searchOption, setSearchOption] = useState<'tag' | 'keyword'>('keyword');
