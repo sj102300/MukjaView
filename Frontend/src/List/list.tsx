@@ -22,7 +22,7 @@ export default function List() {
     let [randomVariable, setRandomVariable] = useState<number>(0);
 
     useEffect(()=>{
-        // setRandomVariable(Math.random());
+        setRandomVariable(Math.random());
     },[])
 
     let [searchOption, setSearchOption] = useState<'tag' | 'keyword'>('keyword');
