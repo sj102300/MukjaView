@@ -86,22 +86,50 @@ export function SecondPage({ setSelectedFile, setPreviewUrl }: SecondPageProps) 
 interface ThirdPageProps {
     selectedFile: File | null;
     previewUrl: string;
+    setSelectedFile: (tmp: null)=>void;
+    setSmileImageUrl: (smileImageUrl: string)=>void;
+    setSadImageUrl: (sadImageUrl: string)=>void;
+    setNeutralImageUrl: (neutralImageURl: string)=>void;
 }
 
-export function ThirdPage({ selectedFile, previewUrl }: ThirdPageProps) {
+export function ThirdPage({ selectedFile, previewUrl, setSelectedFile, setSmileImageUrl, setNeutralImageUrl, setSadImageUrl }: ThirdPageProps) {
 
     const swiper = useSwiper();
 
     const createImages = () => {
         if (selectedFile !== null) {
           let formData = new FormData();
+          //이거 Append 안되고있음
+          console.log(selectedFile);
           formData.append('image', selectedFile);
+          console.log(!('hello'&&'hello'&&'null'&&'null'))
     
-        //   axios.post('https://mukjaview.kro.kr/upload', formData)
-        //     .then((response) => {
-        //       console.log(response.data);
-        //     //   setSmile
-        //     })
+          axios.post('https://mukjaview.kro.kr/upload', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+          })
+            .then((response) => {
+              console.log(response.data);
+              if(response.data) {
+                setSmileImageUrl(response.data[0]);
+                setNeutralImageUrl(response.data[1]);
+                setSadImageUrl(response.data[2]);
+              }
+              else{
+                console.log('엥 ?');
+              }
+            }).catch((error)=>{
+                if(error.response.status === 400){
+                    console.log('셀카가 아닙니다!')
+                } else if(error.response.status === 500){
+                    console.log("카툰화 처리에 실패했습니다.")
+                }
+                else{
+                    console.log('알수없는 에러입니다!')
+                }
+                setSelectedFile(null);
+            })
         }
       }
 
@@ -153,22 +181,19 @@ export function FifthPage({ setIsResonable, setStep }: FifthPageProps) {
 interface SixthPageProps {
     userInputInfo: UserInputInfo;
     setStep: (step: number) => void
+    selectedFile: File | null;
 }
 
-export function SixthPage({ userInputInfo, setStep }: SixthPageProps) {
-
-    const onSuccess = () => {
-        setStep(3);
-    }
+export function SixthPage({ userInputInfo, setStep, selectedFile }: SixthPageProps) {
 
     const { data, isError, error } = useQuery(
         "userInfo",
         () => {
-            //response왔는지 확인하고 안왔으면 기다리기
             initUserInfo(userInputInfo)
         },
         {
-            onSuccess: onSuccess,
+            enabled: !!!(selectedFile && userInputInfo.smileImageUrl && userInputInfo.sadImageUrl && userInputInfo.neutralImageUrl) || (selectedFile === null),
+            onSuccess: () => setStep(3)
         }
     );
 

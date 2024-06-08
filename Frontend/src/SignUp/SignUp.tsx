@@ -1,5 +1,5 @@
 
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { FirstPage, SecondPage, ThirdPage, FifthPage, SixthPage, LastPage } from './pages';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -9,11 +9,7 @@ import './swiper.css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination'
 import FourthPage from './FourthPage';
-import Check, { UserInfo } from './check';
-import { useSearchParams } from 'react-router-dom';
-import { useQuery } from 'react-query';
-import { getUserInfo } from '../apis/userInfo';
-import axios from 'axios';
+import Check from './check';
 
 export interface UserInputInfo {
   identifier: string;
@@ -31,11 +27,10 @@ export function SignUp() {
   let [nickname, setNickname] = useState<string>('');
   let [MBTIOrder, setMBTIOrder] = useState<string>('');
   let [isResonable, setIsResonable] = useState<boolean>(true);
-  let [imageResponse, setImageResponse] = useState({})
 
-  // let [smileImageUrl, setSmileImageUrl] = useState<string | null>(null);
-  // let [sadImageUrl, setSadImageUrl] = useState<string | null>(null);
-  // let [neutralImageUrl, setNeutralImageUrl] = useState<string | null>(null);
+  let [smileImageUrl, setSmileImageUrl] = useState<string | null>(null);
+  let [sadImageUrl, setSadImageUrl] = useState<string | null>(null);
+  let [neutralImageUrl, setNeutralImageUrl] = useState<string | null>(null);
 
   let [selectedFile, setSelectedFile] = useState<File | null>(null);
   let [previewUrl, setPreviewUrl] = useState<string>('');
@@ -55,7 +50,7 @@ export function SignUp() {
       >
         <SwiperSlide><FirstPage setNickname={setNickname} /></SwiperSlide>
         <SwiperSlide><SecondPage setPreviewUrl={setPreviewUrl} setSelectedFile={setSelectedFile} /></SwiperSlide>
-        <SwiperSlide><ThirdPage selectedFile={selectedFile} previewUrl={previewUrl} /></SwiperSlide>
+        <SwiperSlide><ThirdPage selectedFile={selectedFile} previewUrl={previewUrl} setSelectedFile={setSelectedFile} setSmileImageUrl={setSmileImageUrl} setSadImageUrl={setSadImageUrl} setNeutralImageUrl={setNeutralImageUrl} /></SwiperSlide>
         <SwiperSlide><FourthPage setMBTIOrder={setMBTIOrder} /></SwiperSlide>
         <SwiperSlide><FifthPage setIsResonable={setIsResonable} setStep={setStep} /></SwiperSlide>
       </Swiper>
@@ -65,10 +60,10 @@ export function SignUp() {
         nickname: nickname,
         MBTIOrder: MBTIOrder,
         isReasonable: isResonable,
-        // smileImageUrl: smileImageUrl,
-        // sadImageUrl: sadImageUrl,
-        // neutralImageUrl: neutralImageUrl
-      }} setStep={setStep} />
+        smileImageUrl: smileImageUrl,
+        sadImageUrl: sadImageUrl,
+        neutralImageUrl: neutralImageUrl,
+      }} setStep={setStep} selectedFile={selectedFile} />
     case 3:
       return <LastPage />
     default:
