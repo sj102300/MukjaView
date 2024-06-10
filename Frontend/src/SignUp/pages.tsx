@@ -20,7 +20,6 @@ export function FirstPage({ setNickname }: FirstPageProps) {
     let nameRef = useRef<HTMLInputElement>(null);
 
     const goNext = () => {
-        console.log(nameRef.current?.value);
         if (!nameRef.current?.value) {
             nameRef.current?.focus();
         }
@@ -99,10 +98,7 @@ export function ThirdPage({ selectedFile, previewUrl, setSelectedFile, setSmileI
     const createImages = () => {
         if (selectedFile !== null) {
           let formData = new FormData();
-          //이거 Append 안되고있음
-          console.log(selectedFile);
           formData.append('image', selectedFile);
-          console.log(!('hello'&&'hello'&&'null'&&'null'))
     
           axios.post('https://mukjaview.kro.kr/upload', formData, {
             headers: {
@@ -117,7 +113,7 @@ export function ThirdPage({ selectedFile, previewUrl, setSelectedFile, setSmileI
                 setSadImageUrl(response.data[2]);
               }
               else{
-                console.log('엥 ?');
+                setSelectedFile(null);
               }
             }).catch((error)=>{
                 if(error.response.status === 400){
@@ -185,14 +181,14 @@ interface SixthPageProps {
 }
 
 export function SixthPage({ userInputInfo, setStep, selectedFile }: SixthPageProps) {
-
+    
     const { data, isError, error } = useQuery(
         "userInfo",
         () => {
             initUserInfo(userInputInfo)
         },
         {
-            enabled: !!!(selectedFile && userInputInfo.smileImageUrl && userInputInfo.sadImageUrl && userInputInfo.neutralImageUrl) || (selectedFile === null),
+            enabled: (selectedFile === null) || !!(selectedFile && userInputInfo.smileImageUrl && userInputInfo.sadImageUrl && userInputInfo.neutralImageUrl),
             onSuccess: () => setStep(3)
         }
     );
