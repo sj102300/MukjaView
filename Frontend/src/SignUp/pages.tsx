@@ -166,9 +166,9 @@ export function FifthPage({ setIsResonable, setStep }: FifthPageProps) {
             <h3 className="text-2xl m-2 font-bold w-9/10 break-keep">마지막입니다!</h3>
             <h3 className="text-2xl m-2 font-bold w-9/10 break-keep">나는</h3>
             <div className={styles.binaryInput}>
-                <div id="R" onClick={submitSignUp}>비싸더라도 좋은 품질의 음식과 서비스를 원한다.</div>
+                <div id="F" onClick={submitSignUp}>비싸더라도 좋은 품질의 음식과 서비스를 원한다.</div>
                 <p className="text-3xl m-auto">vs</p>
-                <div id="F" onClick={submitSignUp}>합리적인 가격의 음식과 서비스를 원한다.</div>
+                <div id="R" onClick={submitSignUp}>합리적인 가격의 음식과 서비스를 원한다.</div>
             </div>
             <PrevNext prev={"이전"} next={""} />
         </article>
