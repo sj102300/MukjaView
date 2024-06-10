@@ -98,6 +98,11 @@
     border: 1px solid #ff6c1a;
 }
 
+.reviewTxt>span{
+    font-weight: normal !important;
+    background-color: #e9c056 !important;
+}
+
 strong {
     font-weight: normal !important;
     background-color: #e9c056;
