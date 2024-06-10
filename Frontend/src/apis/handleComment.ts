@@ -1,5 +1,5 @@
 import axios from "axios";
-import { QueryClient, useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 
 interface PostCommentProps{
     comment: string;

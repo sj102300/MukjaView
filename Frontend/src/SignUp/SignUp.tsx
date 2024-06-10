@@ -39,7 +39,7 @@ export function SignUp() {
 
   switch (step) {
     case 0:
-      return <Check setStep={setStep} setIdentifier={setIdentifier} />
+      return <Check setStep={setStep} setIdentifier={setIdentifier} setSmileImageUrl={setSmileImageUrl} setSadImageUrl={setSadImageUrl} setNeutralImageUrl={setNeutralImageUrl}/>
     case 1:
       return <Swiper
         allowTouchMove={false}

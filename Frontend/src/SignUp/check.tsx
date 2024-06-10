@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Loading from "../components/Loading";
 import { useQuery } from "react-query";
@@ -8,6 +7,9 @@ import { getUserInfo } from "../apis/userInfo";
 interface CheckProps {
   setStep: (step: number)=>void;
   setIdentifier: (identifier: string)=>void;
+  setSmileImageUrl: (smileImageUrl: string | null)=>void;
+  setSadImageUrl: (sadImageUrl: string | null )=>void;
+  setNeutralImageUrl: (neutralImageUrl: string | null)=>void;
 }
 
 export interface UserInfo {
@@ -22,7 +24,7 @@ export interface UserInfo {
   init: boolean;
 }
 
-export default function Check({ setStep, setIdentifier }: CheckProps){
+export default function Check({ setStep, setIdentifier, setSmileImageUrl, setSadImageUrl, setNeutralImageUrl }: CheckProps){
 
     let navigate = useNavigate();
 
@@ -34,6 +36,9 @@ export default function Check({ setStep, setIdentifier }: CheckProps){
       {
         onSuccess: (userInfo)=>{
           setIdentifier(userInfo.oauthIdentifier);
+          setSmileImageUrl(userInfo.smileImageUrl || null);
+          setSadImageUrl(userInfo.sadImageUrl || null);
+          setNeutralImageUrl(userInfo.neutralImageUrl || null);
           if(userInfo.init === false || searchParams.get('edit') === 'true'){
             setStep(1);
           }

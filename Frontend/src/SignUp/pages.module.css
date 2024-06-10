@@ -113,13 +113,6 @@
     display: grid;
     grid-template-columns: 100%;
     grid-template-rows: 1fr 1fr 1fr;
-
-    /* display: flex;
-    flex-direction: column;
-    gap:25px;
-    justify-content: center;
-    align-items: center;
-    margin: 20px 0; */
 }
 
 .binaryInput>div, .result>div{

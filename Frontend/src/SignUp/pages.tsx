@@ -2,7 +2,7 @@
 import styles from './pages.module.css';
 import PrevNext from '../components/PrevNext';
 import { useSwiper } from 'swiper/react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Oval } from 'react-loader-spinner';
 import { UserInputInfo } from './SignUp';

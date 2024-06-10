@@ -10,14 +10,7 @@ import { RestaurantsInfo } from "../Map/Map";
 import { getRestaurantsInfobyKeyword, getRestaurantsInfobyList, getRestaurantsInfobyTag } from "../apis/restaurantsInfo";
 import { useNavigate } from "react-router-dom";
 
-interface RestaurantsItemObj {
-    thumbnail: string;
-    name: string;
-    address: string;
-}
-
 export default function List() {
-
 
     let [randomVariable, setRandomVariable] = useState<number>(0);
 

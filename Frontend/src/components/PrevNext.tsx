@@ -1,7 +1,6 @@
 
 import { useSwiper } from 'swiper/react';
 
-
 interface PrevNextProps {
     prev: string,
     next: string,

@@ -18,7 +18,7 @@ import { HiMiniTrash } from "react-icons/hi2";
 import { useHandleLike } from "../apis/handleLike";
 import { useDeleteComment, usePostComment } from "../apis/handleComment";
 
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ReferenceLine, ResponsiveContainer } from 'recharts';
 import { MukbtiAttribute, getMukbtiAttribute } from "../utils/handleMBTI";
 
 interface Comment {
