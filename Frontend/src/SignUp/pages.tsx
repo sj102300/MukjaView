@@ -6,9 +6,10 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Oval } from 'react-loader-spinner';
 import { UserInputInfo } from './SignUp';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { initUserInfo } from '../apis/userInfo';
 import axios from 'axios';
+import { UserInfo } from './check';
 
 interface FirstPageProps {
     setNickname: (nickname: string) => void;
@@ -85,10 +86,10 @@ export function SecondPage({ setSelectedFile, setPreviewUrl }: SecondPageProps) 
 interface ThirdPageProps {
     selectedFile: File | null;
     previewUrl: string;
-    setSelectedFile: (tmp: null)=>void;
-    setSmileImageUrl: (smileImageUrl: string)=>void;
-    setSadImageUrl: (sadImageUrl: string)=>void;
-    setNeutralImageUrl: (neutralImageURl: string)=>void;
+    setSelectedFile: (tmp: null) => void;
+    setSmileImageUrl: (smileImageUrl: string) => void;
+    setSadImageUrl: (sadImageUrl: string) => void;
+    setNeutralImageUrl: (neutralImageURl: string) => void;
 }
 
 export function ThirdPage({ selectedFile, previewUrl, setSelectedFile, setSmileImageUrl, setNeutralImageUrl, setSadImageUrl }: ThirdPageProps) {
@@ -97,39 +98,40 @@ export function ThirdPage({ selectedFile, previewUrl, setSelectedFile, setSmileI
 
     const createImages = () => {
         if (selectedFile !== null) {
-          let formData = new FormData();
-          formData.append('image', selectedFile);
-    
-          axios.post('https://mukjaview.kro.kr/upload', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-              }
-          })
-            .then((response) => {
-              console.log(response.data);
-              if(response.data) {
-                setSmileImageUrl(response.data[0]);
-                setNeutralImageUrl(response.data[1]);
-                setSadImageUrl(response.data[2]);
-              }
-              else{
-                setSelectedFile(null);
-              }
-            }).catch((error)=>{
-                if(error.response.status === 400){
-                    console.log('셀카가 아닙니다!')
-                } else if(error.response.status === 500){
-                    console.log("카툰화 처리에 실패했습니다.")
-                }
-                else{
-                    console.log('알수없는 에러입니다!')
-                }
-                setSelectedFile(null);
-            })
-        }
-      }
+            let formData = new FormData();
+            formData.append('image', selectedFile);
 
-    const goNext = ()=>{
+            axios.post('https://mukjaview.kro.kr/upload', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+                .then((response) => {
+                    console.log(response.data);
+                    if (response.data) {
+                        setSmileImageUrl(response.data[0]);
+                        setNeutralImageUrl(response.data[1]);
+                        setSadImageUrl(response.data[2]);
+                    }
+                    else {
+                        setSelectedFile(null);
+                    }
+                }).catch((error) => {
+                    console.log('엥 ? ');
+                    setSelectedFile(null);
+                    if (error.response.status === 400) {
+                        console.log('셀카가 아닙니다!')
+                    } else if (error.response.status === 500) {
+                        console.log("카툰화 처리에 실패했습니다.")
+                    }
+                    else {
+                        console.log('알수없는 에러입니다!')
+                    }
+                })
+        }
+    }
+
+    const goNext = () => {
         swiper.slideNext();
         createImages();
     }
@@ -137,7 +139,7 @@ export function ThirdPage({ selectedFile, previewUrl, setSelectedFile, setSmileI
     return (
         <article className={styles.container}>
             <img src={previewUrl} alt="셀카 사진" width='200' />
-            <PrevNext prev={"재선택"} next={"다음"} goNext={goNext}/>
+            <PrevNext prev={"재선택"} next={"다음"} goNext={goNext} />
         </article>
     )
 }
@@ -181,19 +183,45 @@ interface SixthPageProps {
 }
 
 export function SixthPage({ userInputInfo, setStep, selectedFile }: SixthPageProps) {
-    
-    const { data, isError, error } = useQuery(
-        "userInfo",
-        () => {
-            initUserInfo(userInputInfo)
-        },
-        {
-            enabled: (selectedFile === null) || !!(selectedFile && userInputInfo.smileImageUrl && userInputInfo.sadImageUrl && userInputInfo.neutralImageUrl),
-            onSuccess: () => setStep(3)
+
+    const useInitUserInfo = () => {
+        const queryClient = useQueryClient()
+        return useMutation(initUserInfo, {
+            onSuccess: () => {
+                queryClient.invalidateQueries('userInfo');
+                setStep(3);
+            },
+        })
+    }
+
+    const { mutate: handleInitUserInfo } = useInitUserInfo()
+
+    useEffect(() => {
+        console.log((selectedFile === null))
+        console.log(selectedFile?.name);
+        console.log(userInputInfo.smileImageUrl);
+        console.log(userInputInfo.sadImageUrl);
+        console.log(userInputInfo.neutralImageUrl);
+        console.log(!!('null'&&'null'&&'null'&&null));
+        console.log(!!(selectedFile?.name && userInputInfo.smileImageUrl && userInputInfo.sadImageUrl && userInputInfo.neutralImageUrl))
+        console.log(selectedFile === null);
+
+        if ((selectedFile === null) || !!(selectedFile?.name && userInputInfo.smileImageUrl && userInputInfo.sadImageUrl && userInputInfo.neutralImageUrl)) {
+            handleInitUserInfo(userInputInfo);
         }
-    );
+    }, [selectedFile, userInputInfo.smileImageUrl, userInputInfo.sadImageUrl, userInputInfo.neutralImageUrl])
 
 
+    // const { data, isError, error } = useQuery(
+    //     "userInfo",
+    //     () => {
+    //         initUserInfo(userInputInfo)
+    //     },
+    //     {
+    //         enabled: (selectedFile === null) || !!(selectedFile?.name && userInputInfo.smileImageUrl && userInputInfo.sadImageUrl && userInputInfo.neutralImageUrl),
+    //         onSuccess: () => setStep(3)
+    //     }
+    // );
 
     return (
         <article className={styles.container}>
