@@ -216,7 +216,7 @@ export default function ReviewCard() {
 
     let commentRef = useRef<HTMLInputElement | null>(null)
 
-    const { mutate: handleLike } = useHandleLike()
+    const { mutate: handleLike } = useHandleLike();
     const { mutate: postComment } = usePostComment();
     const { mutate: deleteComment } = useDeleteComment();
 
