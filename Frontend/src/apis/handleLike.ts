@@ -2,7 +2,6 @@ import axios from "axios"
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { DetailRestaurantInfo } from "../Review/reviewCard";
 import { UserInfo } from "../SignUp/check";
-import { getUserInfo } from "./userInfo";
 
 interface LikeProps {
   like: boolean;
@@ -43,28 +42,3 @@ export const useHandleLike = () => {
     },
   })
 }
-
-
-//   export const useHandleLike = () => {
-//     const queryClient = useQueryClient()
-//     return useMutation(handleLike, {
-//         onMutate: async (newInfo) => {
-//             await queryClient.cancelQueries("detailRestaurantInfo");
-//             const previousProductData = queryClient.getQueryData<DetailRestaurantInfo | undefined>("detailRestaurantInfo");
-//             queryClient.setQueryData<DetailRestaurantInfo | undefined>("get-product", (oldData) => {
-//                 if(!oldData){
-//                     return undefined;
-//                 }
-//               return {
-//                 ...oldData,
-//                 like: !(oldData.like)
-//               };
-//             });
-//             return {
-//               previousProductData,
-//             };
-//           },
-//     })
-//   }
-
-

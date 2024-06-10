@@ -3,7 +3,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import styles from './reviewCard.module.css'
 import NavBar from "../components/NavBar";
-import { TbHeart, TbHeartFilled, TbLocationShare } from "react-icons/tb";
+import { TbHeart, TbHeartFilled } from "react-icons/tb";
 import { useQuery } from "react-query";
 import { getDetailRestaurantInfo, getRestaurantTextReview } from "../apis/restaurantsInfo";
 import { UserInfo } from "../SignUp/check";

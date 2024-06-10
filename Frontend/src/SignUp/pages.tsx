@@ -6,10 +6,9 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Oval } from 'react-loader-spinner';
 import { UserInputInfo } from './SignUp';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { initUserInfo } from '../apis/userInfo';
 import axios from 'axios';
-import { UserInfo } from './check';
 
 interface FirstPageProps {
     setNickname: (nickname: string) => void;
@@ -197,31 +196,10 @@ export function SixthPage({ userInputInfo, setStep, selectedFile }: SixthPagePro
     const { mutate: handleInitUserInfo } = useInitUserInfo()
 
     useEffect(() => {
-        console.log((selectedFile === null))
-        console.log(selectedFile?.name);
-        console.log(userInputInfo.smileImageUrl);
-        console.log(userInputInfo.sadImageUrl);
-        console.log(userInputInfo.neutralImageUrl);
-        console.log(!!('null'&&'null'&&'null'&&null));
-        console.log(!!(selectedFile?.name && userInputInfo.smileImageUrl && userInputInfo.sadImageUrl && userInputInfo.neutralImageUrl))
-        console.log(selectedFile === null);
-
         if ((selectedFile === null) || !!(selectedFile?.name && userInputInfo.smileImageUrl && userInputInfo.sadImageUrl && userInputInfo.neutralImageUrl)) {
             handleInitUserInfo(userInputInfo);
         }
     }, [selectedFile, userInputInfo.smileImageUrl, userInputInfo.sadImageUrl, userInputInfo.neutralImageUrl])
-
-
-    // const { data, isError, error } = useQuery(
-    //     "userInfo",
-    //     () => {
-    //         initUserInfo(userInputInfo)
-    //     },
-    //     {
-    //         enabled: (selectedFile === null) || !!(selectedFile?.name && userInputInfo.smileImageUrl && userInputInfo.sadImageUrl && userInputInfo.neutralImageUrl),
-    //         onSuccess: () => setStep(3)
-    //     }
-    // );
 
     return (
         <article className={styles.container}>
