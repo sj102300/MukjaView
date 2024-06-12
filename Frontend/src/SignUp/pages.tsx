@@ -86,9 +86,9 @@ interface ThirdPageProps {
     selectedFile: File | null;
     previewUrl: string;
     setSelectedFile: (tmp: null) => void;
-    setSmileImageUrl: (smileImageUrl: string) => void;
-    setSadImageUrl: (sadImageUrl: string) => void;
-    setNeutralImageUrl: (neutralImageURl: string) => void;
+    setSmileImageUrl: (smileImageUrl: string | null) => void;
+    setSadImageUrl: (sadImageUrl: string | null) => void;
+    setNeutralImageUrl: (neutralImageURl: string| null) => void;
 }
 
 export function ThirdPage({ selectedFile, previewUrl, setSelectedFile, setSmileImageUrl, setNeutralImageUrl, setSadImageUrl }: ThirdPageProps) {
@@ -99,6 +99,9 @@ export function ThirdPage({ selectedFile, previewUrl, setSelectedFile, setSmileI
         if (selectedFile !== null) {
             let formData = new FormData();
             formData.append('image', selectedFile);
+            setSmileImageUrl(null);
+            setNeutralImageUrl(null);
+            setSadImageUrl(null);
 
             axios.post('https://mukjaview.kro.kr/upload', formData, {
                 headers: {
