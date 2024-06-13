@@ -107,16 +107,14 @@ export function SecondPage({ setSelectedFile, setPreviewUrl, selectedFile }: Sec
         <article className={styles.container}>
             {
                 !loading ?
-                    (
-                        <>
-                            <h3 className="text-2xl font-bold w-4/5 break-keep">본인 얼굴이 나온 셀카를 업로드 해주세요.</h3>
-                            <input ref={fileRef} type="file" className="hidden" onChange={handleFileChange} />
-                            <button className={styles.photoinput} onClick={handleFileOpen}>
-                                사진 선택..
-                            </button>
-                            <PrevNext prev={""} next={"건너뛰기"} goNext={goNext} />
-                        </>
-                    )
+                    <>
+                        <h3 className="text-2xl font-bold w-4/5 break-keep">본인 얼굴이 나온 셀카를 업로드 해주세요.</h3>
+                        <input ref={fileRef} type="file" className="hidden" onChange={handleFileChange} />
+                        <button className={styles.photoinput} onClick={handleFileOpen}>
+                            사진 선택..
+                        </button>
+                        <PrevNext prev={""} next={"건너뛰기"} goNext={goNext} />
+                    </>
                     :
                     <>
                         <h3 className="text-3xl m-8 font-bold w-9/10 break-keep">jpg로 파일 변환 중..</h3>
@@ -188,9 +186,9 @@ export function ThirdPage({ selectedFile, previewUrl, setSelectedFile, setSmileI
 
     }
 
-    const goNext = async () => {
-        swiper.slideNext();
+    const goNext = () => {
         createImages();
+        swiper.slideNext();
     }
 
     return (
