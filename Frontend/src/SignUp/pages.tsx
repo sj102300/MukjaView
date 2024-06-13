@@ -11,6 +11,7 @@ import { initUserInfo } from '../apis/userInfo';
 import axios from 'axios';
 import heic2any from 'heic2any';
 import Loading from '../components/Loading';
+import { toast } from 'react-toastify';
 
 interface FirstPageProps {
     setNickname: (nickname: string) => void;
@@ -96,7 +97,7 @@ export function SecondPage({ setSelectedFile, setPreviewUrl, selectedFile }: Sec
                 swiper.slideNext();
             }
             else {
-                console.log('jpg로 변환 실패');
+                toast('jpg로 변환 실패');
                 setSelectedFile(null);
             }
         }
@@ -176,12 +177,12 @@ export function ThirdPage({ selectedFile, previewUrl, setSelectedFile, setSmileI
                 console.log('엥 ? ');
                 setSelectedFile(null);
                 if (error.response.status === 400) {
-                    console.log('셀카가 아닙니다!')
+                    toast('셀카가 아닙니다!')
                 } else if (error.response.status === 500) {
-                    console.log("카툰화 처리에 실패했습니다.")
+                    toast("카툰화 처리에 실패했습니다.")
                 }
                 else {
-                    console.log('알수없는 에러입니다!')
+                    toast('알수없는 에러입니다!')
                 }
             })
 
@@ -189,7 +190,7 @@ export function ThirdPage({ selectedFile, previewUrl, setSelectedFile, setSmileI
 
     const goNext = async () => {
         swiper.slideNext();
-        // createImages();
+        createImages();
     }
 
     return (
