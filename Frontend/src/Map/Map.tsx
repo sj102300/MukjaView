@@ -15,6 +15,7 @@ import { getLatLngBounds, getRestaurantsInfobyCoord, getRestaurantsInfobyKeyword
 import { UserInfo } from "../SignUp/check";
 import { getUserInfo } from "../apis/userInfo";
 import { MukbtiAttribute, getMukbtiAttribute } from "../utils/handleMBTI";
+import BigThumbnail from "../components/bigThumbnail";
 
 
 // https://soccer-programming.tistory.com/40
@@ -48,11 +49,11 @@ export interface PreviewRestaurantInfo {
   emotion: string;
 }
 
-interface Bound{
+interface Bound {
   min_lat: number;
   max_lat: number;
-  min_long:  number;
-  max_long:  number;
+  min_long: number;
+  max_long: number;
 }
 
 export function Map() {
@@ -63,9 +64,9 @@ export function Map() {
 
   let [randomVariable, setRandomVariable] = useState<number>(0)
 
-  useEffect(()=>{
+  useEffect(() => {
     setRandomVariable(Math.random());
-  },[])
+  }, [])
 
   //기본: 세종대학교 대양AI센터
   let [myLocation, setMyLocation] = useState<LocationType>({
@@ -156,7 +157,7 @@ export function Map() {
     "restaurantsInfoByTag",
     () => getRestaurantsInfobyTag(searchValue),
     {
-      enabled:false,
+      enabled: false,
       onSuccess: (data) => {
         setRestaurants(data);
       },
@@ -187,7 +188,7 @@ export function Map() {
     "restaurantsInfoByKeyword",
     () => getRestaurantsInfobyKeyword(searchValue),
     {
-      enabled:false,
+      enabled: false,
       onSuccess: (data) => {
         setRestaurants(data);
       },
@@ -213,18 +214,44 @@ export function Map() {
   );
 
   const searchStart = () => {
-    if(searchOption === 'tag'){
+    if (searchOption === 'tag') {
       restaurantsByTag.refetch();
     }
-    else{
+    else {
       restaurantsByKeyword.refetch();
     }
   }
 
+  let [bigThumbnail, setBigThumbnail] = useState<string>('');
+
+  const contentString = renderToString(
+    <PreviewRestaurant
+        id={previewRestaurant.restaurantId}
+        thumbnailPictureUrl={previewRestaurant.thumbnailPictureUrl + `&v=${randomVariable}`}
+        restaurantName={previewRestaurant.restaurantName}
+        address={previewRestaurant.address}
+        tags={previewRestaurant.tags}
+        // setBigThumbnail={setBigThumbnail}
+    />);
+
+    useEffect(()=>{
+      // 이벤트 리스너 추가
+      if (previewRestaurant.isAvailable){
+        const imgElement = document.querySelector('#thumbnail');
+        if (imgElement){
+          imgElement.addEventListener('click', (e) => {
+            e.stopPropagation();
+            setBigThumbnail(previewRestaurant.thumbnailPictureUrl + `&v=${randomVariable}`);
+          });
+        }
+        
+      }
+    },[previewRestaurant])
+
   return (
     <>
       <div className={styles.mapContainer}>
-        <div className={styles.searchBar}><Search searchStart={searchStart} setSearchOption={setSearchOption} setSearchValue={setSearchValue}/></div>
+        <div className={styles.searchBar}><Search searchStart={searchStart} setSearchOption={setSearchOption} setSearchValue={setSearchValue} /></div>
         <MapDiv
           style={{
             width: '100%',
@@ -280,25 +307,21 @@ export function Map() {
                 onClick={() => navigate(`/review/${previewRestaurant.restaurantId}`)}
                 position={new navermaps.LatLng(previewRestaurant.latitude, previewRestaurant.longitude)}
                 icon={{
-                  content: renderToString(
-                    <PreviewRestaurant
-                      id={previewRestaurant.restaurantId}
-                      thumbnailPictureUrl={previewRestaurant.thumbnailPictureUrl + `&v=${randomVariable}`}
-                      restaurantName={previewRestaurant.restaurantName}
-                      address={previewRestaurant.address}
-                      tags={previewRestaurant.tags}
-                    />),
+                  content: contentString,
                   anchor: new naver.maps.Point(80, 80)
                 }}
               />
             }
 
+      {
+        bigThumbnail && <BigThumbnail bigThumbnail={bigThumbnail} setBigThumbnail={setBigThumbnail} />
+      }
           </NaverMap>
         </MapDiv>
         <button onClick={getMyLocation} className={styles.myLocation}><MdMyLocation size={"30"} color={"grey"} /></button>
         <button onClick={() => {
           restaurantsByCoord.refetch();
-          }} className={styles.refresh}><MdRefresh size={"30"} color={"grey"} /></button>
+        }} className={styles.refresh}><MdRefresh size={"30"} color={"grey"} /></button>
       </div>
       <NavBar />
     </>

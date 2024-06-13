@@ -9,6 +9,7 @@ import { useQuery } from "react-query";
 import { RestaurantsInfo } from "../Map/Map";
 import { getRestaurantsInfobyKeyword, getRestaurantsInfobyList, getRestaurantsInfobyTag } from "../apis/restaurantsInfo";
 import { useNavigate } from "react-router-dom";
+import BigThumbnail from "../components/bigThumbnail";
 
 export default function List() {
 
@@ -66,8 +67,13 @@ export default function List() {
     }
     let navigate = useNavigate();
 
+    let [bigThumbnail, setBigThumbnail] = useState<string>('');
+
     const LazyImage: React.FC<{ src: string; alt: string }> = ({ src, alt }) => {
-        return <img src={src} alt={alt} loading="lazy" />;
+        return <img onClick={(e)=>{
+            e.stopPropagation();
+            setBigThumbnail(src);
+            }} src={src} alt={alt} loading="lazy" />;
       };
 
     return (
@@ -88,6 +94,9 @@ export default function List() {
                             </div>
                         )
                     })
+                }
+                {
+                    bigThumbnail && <BigThumbnail bigThumbnail={bigThumbnail} setBigThumbnail={setBigThumbnail}/>
                 }
             </div>
             <NavBar />

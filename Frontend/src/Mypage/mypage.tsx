@@ -48,7 +48,7 @@ export default function MyPage() {
         <>
             {(user.data && mukbtiAttribute !== null) && <>
                 <div className={styles.profile}>
-                    <img src={user?.data?.smileImageUrl || mukbtiAttribute?.data?.smileImageUrl} alt="프사" width={"100"} />
+                    <img src={user?.data?.neutralImageUrl || mukbtiAttribute?.data?.smileImageUrl} alt="프사" width={"100"} />
                     <div>
                         <p className="text-sm">{mukbtiAttribute.data?.title}({user.data?.mukbti})</p>
                         <h2 className="text-xl">{mukbtiAttribute.data?.taste}</h2>

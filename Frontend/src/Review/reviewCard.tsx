@@ -20,6 +20,7 @@ import { useDeleteComment, usePostComment } from "../apis/handleComment";
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ReferenceLine, ResponsiveContainer } from 'recharts';
 import { MukbtiAttribute, getMukbtiAttribute } from "../utils/handleMBTI";
+import BigThumbnail from "../components/bigThumbnail";
 
 interface Comment {
     commentId: number;
@@ -220,11 +221,16 @@ export default function ReviewCard() {
     const { mutate: postComment } = usePostComment();
     const { mutate: deleteComment } = useDeleteComment();
 
+    let [bigThumbnail, setBigThumbnail] = useState<string>('');
+
     return (
         <>
             <div className={styles.header}>
                 <div className={styles.restaurant}>
-                    <img className="w-[115px] h-[84px]" src={detailRestaurantInfo?.data?.thumbnailPictureUrl + `&v=${randomVariable}`} alt="썸네일 이미지" />
+                    <img onClick={(e) => {
+                        e.stopPropagation();
+                        setBigThumbnail(detailRestaurantInfo?.data?.thumbnailPictureUrl || '');
+                    }} className="w-[115px] h-[84px]" src={detailRestaurantInfo?.data?.thumbnailPictureUrl + `&v=${randomVariable}`} alt="썸네일 이미지" />
                     <div className={styles.info}>
                         <h2 className="text-xl font-bold">{detailRestaurantInfo?.data?.restaurantName}</h2>
                         <h3 className="font-semibold">{detailRestaurantInfo?.data?.address.substring(7)}</h3>
@@ -328,7 +334,7 @@ export default function ReviewCard() {
                                 })
                             }
                         </div>
-                        <div className={styles.reviewTxt} dangerouslySetInnerHTML={{ __html: restaurantTextReview?.data?.review || ''}} />
+                        <div className={styles.reviewTxt} dangerouslySetInnerHTML={{ __html: restaurantTextReview?.data?.review || '' }} />
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
@@ -384,6 +390,9 @@ export default function ReviewCard() {
                     </div>
                 </SwiperSlide>
             </Swiper>
+            {
+                bigThumbnail && <BigThumbnail bigThumbnail={bigThumbnail} setBigThumbnail={setBigThumbnail} />
+            }
             <NavBar />
         </>
     )
