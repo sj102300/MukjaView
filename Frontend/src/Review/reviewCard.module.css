@@ -98,7 +98,7 @@
     border: 1px solid #ff6c1a;
 }
 
-.reviewTxt>span{
+span{
     font-weight: normal !important;
     background-color: #e9c056 !important;
 }
@@ -110,7 +110,6 @@ strong {
 
 mark {
     background-color: #e9c056 !important;
-
 }
 
 .reviewTxt>p {
