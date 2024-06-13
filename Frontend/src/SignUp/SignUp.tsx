@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FirstPage, SecondPage, ThirdPage, FifthPage, SixthPage, LastPage } from './pages';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -37,6 +37,10 @@ export function SignUp() {
 
   let [step, setStep] = useState<number>(0);
 
+  useEffect(()=>{
+    console.log(selectedFile);
+  },[selectedFile])
+
   switch (step) {
     case 0:
       return <Check setStep={setStep} setIdentifier={setIdentifier} setSmileImageUrl={setSmileImageUrl} setSadImageUrl={setSadImageUrl} setNeutralImageUrl={setNeutralImageUrl}/>
@@ -49,7 +53,7 @@ export function SignUp() {
         modules={[Pagination, Navigation]}
       >
         <SwiperSlide><FirstPage setNickname={setNickname} /></SwiperSlide>
-        <SwiperSlide><SecondPage setPreviewUrl={setPreviewUrl} setSelectedFile={setSelectedFile} /></SwiperSlide>
+        <SwiperSlide><SecondPage selectedFile={selectedFile} setPreviewUrl={setPreviewUrl} setSelectedFile={setSelectedFile} /></SwiperSlide>
         <SwiperSlide><ThirdPage selectedFile={selectedFile} previewUrl={previewUrl} setSelectedFile={setSelectedFile} setSmileImageUrl={setSmileImageUrl} setSadImageUrl={setSadImageUrl} setNeutralImageUrl={setNeutralImageUrl} /></SwiperSlide>
         <SwiperSlide><FourthPage setMBTIOrder={setMBTIOrder} /></SwiperSlide>
         <SwiperSlide><FifthPage setIsResonable={setIsResonable} setStep={setStep} /></SwiperSlide>

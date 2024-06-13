@@ -2,13 +2,15 @@
 import styles from './pages.module.css';
 import PrevNext from '../components/PrevNext';
 import { useSwiper } from 'swiper/react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Oval } from 'react-loader-spinner';
 import { UserInputInfo } from './SignUp';
 import { useMutation, useQueryClient } from 'react-query';
 import { initUserInfo } from '../apis/userInfo';
 import axios from 'axios';
+import heic2any from 'heic2any';
+import Loading from '../components/Loading';
 
 interface FirstPageProps {
     setNickname: (nickname: string) => void;
@@ -39,11 +41,12 @@ export function FirstPage({ setNickname }: FirstPageProps) {
 }
 
 interface SecondPageProps {
-    setSelectedFile: (file: File) => void;
-    setPreviewUrl: (url: string) => void
+    setSelectedFile: (file: File | null) => void;
+    setPreviewUrl: (url: string) => void;
+    selectedFile: File | null;
 }
 
-export function SecondPage({ setSelectedFile, setPreviewUrl }: SecondPageProps) {
+export function SecondPage({ setSelectedFile, setPreviewUrl, selectedFile }: SecondPageProps) {
 
     const swiper = useSwiper();
 
@@ -56,28 +59,78 @@ export function SecondPage({ setSelectedFile, setPreviewUrl }: SecondPageProps) 
 
     const handleFileOpen = () => fileRef.current?.click();
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let [loading, setLoading] = useState<boolean>(false);
+
+    const convertImage = async (file: File) => {
+        if (file.type === 'image/heif' || file.type === 'image/heic') {
+            setLoading(true);
+            // HEIC 파일을 JPG로 변환
+            const convertedBlob = await heic2any({
+                blob: file,
+                toType: 'image/jpeg',
+            });
+
+            // Blob을 File 객체로 변환
+            const convertedFile = new File([convertedBlob as Blob], `${file.name}_converted.jpg`, { type: 'image/jpeg' });
+            return convertedFile;
+        }
+        else {
+            return file;
+        }
+
+    }
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             let file = e.target.files[0]
-            setSelectedFile(file);
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onloadend = () => {
-                let url = reader.result?.toString() || ''
-                setPreviewUrl(url);
-            };
-            swiper.slideNext();
+            let convertedFile = await convertImage(file);
+            setLoading(false);
+            if (convertedFile) {
+                setSelectedFile(convertedFile);
+                const reader = new FileReader();
+                reader.readAsDataURL(convertedFile);
+                reader.onloadend = () => {
+                    let url = reader.result?.toString() || ''
+                    setPreviewUrl(url);
+                };
+                swiper.slideNext();
+            }
+            else {
+                console.log('jpg로 변환 실패');
+                setSelectedFile(null);
+            }
         }
     };
 
     return (
         <article className={styles.container}>
-            <h3 className="text-2xl font-bold w-4/5 break-keep">본인 얼굴이 나온 셀카를 업로드 해주세요.</h3>
-            <input ref={fileRef} type="file" className="hidden" onChange={handleFileChange} />
-            <button className={styles.photoinput} onClick={handleFileOpen}>
-                사진 선택..
-            </button>
-            <PrevNext prev={""} next={"건너뛰기"} goNext={goNext} />
+            {
+                !loading ?
+                    (
+                        <>
+                            <h3 className="text-2xl font-bold w-4/5 break-keep">본인 얼굴이 나온 셀카를 업로드 해주세요.</h3>
+                            <input ref={fileRef} type="file" className="hidden" onChange={handleFileChange} />
+                            <button className={styles.photoinput} onClick={handleFileOpen}>
+                                사진 선택..
+                            </button>
+                            <PrevNext prev={""} next={"건너뛰기"} goNext={goNext} />
+                        </>
+                    )
+                    :
+                    <>
+                        <h3 className="text-3xl m-8 font-bold w-9/10 break-keep">jpg로 파일 변환 중..</h3>
+                        <Oval
+                            visible={true}
+                            height="300"
+                            width="300"
+                            color="#ff6c1a"
+                            secondaryColor='ff914d'
+                            ariaLabel="oval-loading"
+                            strokeWidth='1'
+                            strokeWidthSecondary='1'
+                        />
+                    </>
+            }
         </article>
     )
 }
@@ -88,7 +141,7 @@ interface ThirdPageProps {
     setSelectedFile: (tmp: null) => void;
     setSmileImageUrl: (smileImageUrl: string | null) => void;
     setSadImageUrl: (sadImageUrl: string | null) => void;
-    setNeutralImageUrl: (neutralImageURl: string| null) => void;
+    setNeutralImageUrl: (neutralImageURl: string | null) => void;
 }
 
 export function ThirdPage({ selectedFile, previewUrl, setSelectedFile, setSmileImageUrl, setNeutralImageUrl, setSadImageUrl }: ThirdPageProps) {
@@ -96,46 +149,47 @@ export function ThirdPage({ selectedFile, previewUrl, setSelectedFile, setSmileI
     const swiper = useSwiper();
 
     const createImages = () => {
-        if (selectedFile !== null) {
-            let formData = new FormData();
-            formData.append('image', selectedFile);
-            setSmileImageUrl(null);
-            setNeutralImageUrl(null);
-            setSadImageUrl(null);
+        if (!selectedFile) return;
 
-            axios.post('https://mukjaview.kro.kr/upload', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
+        let formData = new FormData();
+        formData.append('image', selectedFile);
+        setSmileImageUrl(null);
+        setNeutralImageUrl(null);
+        setSadImageUrl(null);
+
+        axios.post('https://mukjaview.kro.kr/upload', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+            .then((response) => {
+                console.log(response.data);
+                if (response.data) {
+                    setSmileImageUrl(response.data[0]);
+                    setNeutralImageUrl(response.data[1]);
+                    setSadImageUrl(response.data[2]);
+                }
+                else {
+                    setSelectedFile(null);
+                }
+            }).catch((error) => {
+                console.log('엥 ? ');
+                setSelectedFile(null);
+                if (error.response.status === 400) {
+                    console.log('셀카가 아닙니다!')
+                } else if (error.response.status === 500) {
+                    console.log("카툰화 처리에 실패했습니다.")
+                }
+                else {
+                    console.log('알수없는 에러입니다!')
                 }
             })
-                .then((response) => {
-                    console.log(response.data);
-                    if (response.data) {
-                        setSmileImageUrl(response.data[0]);
-                        setNeutralImageUrl(response.data[1]);
-                        setSadImageUrl(response.data[2]);
-                    }
-                    else {
-                        setSelectedFile(null);
-                    }
-                }).catch((error) => {
-                    console.log('엥 ? ');
-                    setSelectedFile(null);
-                    if (error.response.status === 400) {
-                        console.log('셀카가 아닙니다!')
-                    } else if (error.response.status === 500) {
-                        console.log("카툰화 처리에 실패했습니다.")
-                    }
-                    else {
-                        console.log('알수없는 에러입니다!')
-                    }
-                })
-        }
+
     }
 
-    const goNext = () => {
+    const goNext = async () => {
         swiper.slideNext();
-        createImages();
+        // createImages();
     }
 
     return (
