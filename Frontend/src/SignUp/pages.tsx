@@ -175,12 +175,12 @@ export function ThirdPage({ selectedFile, previewUrl, setSelectedFile, setSmileI
                 console.log('엥 ? ');
                 setSelectedFile(null);
                 if (error.response.status === 400) {
-                    toast('셀카가 아닙니다!')
+                    toast('❌ 셀카가 아닙니다!')
                 } else if (error.response.status === 500) {
-                    toast("카툰화 처리에 실패했습니다.")
+                    toast("❌ 카툰화 처리에 실패했습니다.")
                 }
                 else {
-                    toast('알수없는 에러입니다!')
+                    toast('❌ 알수없는 에러입니다!')
                 }
             })
 
