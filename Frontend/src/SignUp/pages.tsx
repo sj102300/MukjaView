@@ -63,7 +63,6 @@ export function SecondPage({ setSelectedFile, setPreviewUrl, selectedFile }: Sec
     let [loading, setLoading] = useState<boolean>(false);
 
     const convertImage = async (file: File) => {
-        toast(file.type)
         if (file.type === 'image/heif' || file.type === 'image/heic') {
             setLoading(true);
             // HEIC 파일을 JPG로 변환
@@ -149,6 +148,7 @@ export function ThirdPage({ selectedFile, previewUrl, setSelectedFile, setSmileI
     const swiper = useSwiper();
 
     const createImages = () => {
+        toast(selectedFile);
         if (!selectedFile) return;
 
         let formData = new FormData();
