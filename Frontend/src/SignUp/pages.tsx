@@ -148,7 +148,6 @@ export function ThirdPage({ selectedFile, previewUrl, setSelectedFile, setSmileI
     const swiper = useSwiper();
 
     const createImages = () => {
-        toast(selectedFile?.name);
         if (!selectedFile) return;
 
         let formData = new FormData();
@@ -157,33 +156,38 @@ export function ThirdPage({ selectedFile, previewUrl, setSelectedFile, setSmileI
         setNeutralImageUrl(null);
         setSadImageUrl(null);
 
-        axios.post('https://mukjaview.kro.kr/upload', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        })
-            .then((response) => {
-                console.log(response.data);
-                if (response.data) {
-                    setSmileImageUrl(response.data[0]);
-                    setNeutralImageUrl(response.data[1]);
-                    setSadImageUrl(response.data[2]);
-                }
-                else {
-                    setSelectedFile(null);
-                }
-            }).catch((error) => {
-                console.log('엥 ? ');
-                setSelectedFile(null);
-                if (error.response.status === 400) {
-                    toast('❌ 셀카가 아닙니다!')
-                } else if (error.response.status === 500) {
-                    toast("❌ 카툰화 처리에 실패했습니다.")
-                }
-                else {
-                    toast('❌ 알수없는 에러입니다!')
-                }
-            })
+        toast('❌먹바타 생성에 실패했습니다.');
+        setSelectedFile(null);
+
+
+        // axios.post('https://mukjaview.kro.kr/upload', formData, {
+        //     headers: {
+        //         'Content-Type': 'multipart/form-data'
+        //     }
+        // })
+        //     .then((response) => {
+        //         console.log(response.data);
+        //         if (response.data) {
+        //             setSmileImageUrl(response.data[0]);
+        //             setNeutralImageUrl(response.data[1]);
+        //             setSadImageUrl(response.data[2]);
+        //         }
+        //         else {
+        //             setSelectedFile(null);
+        //         }
+        //     }).catch((error) => {
+        //         console.log('엥 ? ');
+        //         console.log(error)
+        //         setSelectedFile(null);
+        //         if (error.response.status === 400) {
+        //             toast('❌ 셀카가 아닙니다!')
+        //         } else if (error.response.status === 500) {
+        //             toast("❌ 카툰화 처리에 실패했습니다.")
+        //         }
+        //         else {
+        //             toast('❌ 알수없는 에러입니다!')
+        //         }
+        //     })
 
     }
 
