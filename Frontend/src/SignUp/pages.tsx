@@ -174,6 +174,8 @@ export function ThirdPage({ selectedFile, previewUrl, setSelectedFile, setSmileI
             }).catch((error) => {
                 console.log('엥 ? ');
                 setSelectedFile(null);
+                console.log(error);
+                toast(error);
                 if (error.response.status === 400) {
                     toast('❌ 셀카가 아닙니다!')
                 } else if (error.response.status === 500) {
