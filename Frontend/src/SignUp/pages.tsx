@@ -148,7 +148,7 @@ export function ThirdPage({ selectedFile, previewUrl, setSelectedFile, setSmileI
     const swiper = useSwiper();
 
     const createImages = () => {
-        toast(selectedFile);
+        toast(selectedFile?.name);
         if (!selectedFile) return;
 
         let formData = new FormData();
