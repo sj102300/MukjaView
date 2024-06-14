@@ -11,7 +11,7 @@ export const getRestaurantsInfobyCoord = (mapRef: React.MutableRefObject<naver.m
             max_lat: bound?.max_lat,
             min_long: bound?.min_long,
             max_long: bound?.max_long,
-            is_sort: true,
+            is_sort: false,
         }
     })
     .then(response => response.data);
@@ -45,7 +45,7 @@ export const getLatLngBounds = (mapRef: React.MutableRefObject<naver.maps.Map | 
         params: {
             page:0,
             tag: tag,
-            is_sort: true,
+            is_sort: false,
         }
     })
     .then(response => response.data);
@@ -76,10 +76,10 @@ export const getLatLngBounds = (mapRef: React.MutableRefObject<naver.maps.Map | 
     }).then(response => response.data);
   }
 
-  export const getRestaurantsInfobyList = ()=>{
+  export const getRestaurantsInfobyList = (page: number)=>{
     return axios.get('https://mukjaview.kro.kr/api/v1/restaurants/by-coordinates',{
       params: {
-          page:0,
+          page: page,
           min_lat: 33.1059,
           max_lat: 38.6230,
           min_long: 125.8879,
