@@ -1,0 +1,255 @@
+.header {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    padding: 15px 20px 10px 20px;
+    height: 150px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.restaurant {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: flex-start;
+    width:100%;
+}
+
+
+.info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: calc(100% - 125px);
+}
+
+.tags {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+    overflow-x: scroll;
+    white-space: nowrap;
+    scroll-behavior: smooth;
+}
+
+.tags::-webkit-scrollbar {
+    display: none;
+}
+
+
+.tags>div {
+    border: 1px solid #ff6c1a;
+    padding: 3px 10px;
+    border-radius: 25px;
+    font-size: small;
+    text-align: center;
+    /* width: 100%; */
+}
+
+.icons {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    justify-content: space-between;
+}
+
+.images {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    overflow-x: scroll;
+    flex-wrap: nowrap;
+    gap: 5px;
+    padding: 10px;
+
+    position: relative;
+    top: 0;
+    left: 0;
+    background-color: white;
+}
+
+.images>img {
+    width: 100px;
+    background-color: aqua;
+}
+
+.images::-webkit-scrollbar {
+    display: none;
+}
+
+.more {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 15px;
+    border-radius: 25px;
+    padding: 3px 10px;
+    border: 1px solid #ff6c1a;
+}
+
+span{
+    font-weight: normal !important;
+    background-color: #e9c056 !important;
+}
+
+strong {
+    font-weight: normal !important;
+    background-color: #e9c056;
+}
+
+mark {
+    background-color: #e9c056 !important;
+}
+
+.reviewTxt>p {
+    margin-bottom: 10px;
+}
+
+.reviewTxt>p:last-child {
+    margin-bottom: 0;
+}
+
+
+.swiperContainer {
+    position: absolute;
+    top: 150px;
+    margin: 10px 11%;
+    width: 78%;
+    height: calc(100dvh - 228px);
+    overflow: hidden;
+}
+
+.swiper-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 18px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.firstCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background-color: #F4F4F4;
+    border-radius: 20px;
+    border: 1px solid lightgray;
+
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+}
+
+.fitMukbti{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap:5px;
+}
+
+.secondCard {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    background-color: white;
+    padding: 0 10px 10px 10px;
+    border: 1px solid lightgray;
+
+    position: relative;
+    top: 0;
+    left: 0;
+    background-color: white;
+    overflow: scroll;
+}
+
+.secondCard::-webkit-scrollbar {
+    display: none;
+}
+
+.thirdCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    background-color: #F4F4F4;
+    border: 1px solid lightgray;
+    padding: 10px;
+
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+}
+
+.comments {
+    position: absolute;
+    top:10px;
+    left:10px;
+    width:calc(100% - 20px);
+    height: calc(100% - 80px);
+    overflow-y:scroll;
+
+    display: flex;
+    flex-direction: column;
+    gap:5px;
+}
+
+.comment {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 50px 1fr 20px;
+    gap: 5px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    grid-template-rows: max-content;
+    padding: 5px;
+
+    background-color: white;
+    border-radius: 14px;
+}
+
+
+.commentInput {
+    display: grid;
+    width: calc(100% - 20px);
+    grid-template-columns: 50px 1fr 40px;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 5px;
+
+    background-color: white;
+    border-radius: 14px;
+
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    height:50px;
+}
+
+.commentInput>input {
+    font-size: small;
+    height: 30px;
+    width:100%;
+}
+
+.commentInput>button {
+    color: gray;
+    font-size: small;
+    height: 30px
+}

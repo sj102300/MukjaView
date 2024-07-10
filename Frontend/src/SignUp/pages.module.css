@@ -1,0 +1,142 @@
+.container {
+    width: 100%;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    background-color: #ffffff;
+
+    font-family: 'NanumSquareRound';
+    text-align: center;
+}
+
+@media (min-width:800px) {
+    .container {
+        width: 800px;
+        margin: 0 auto;
+    }
+
+    .elementList {
+        width: 70%;
+    }
+    .orderList {
+        width: 70%;
+    }
+}
+
+.nicknameinput {
+    width: 80%;
+    border-bottom: 1px solid lightgray;
+    text-align: center;
+    padding: 10px;
+}
+
+/* .nicknameinput:focus{
+    border-color: red solid 2px;
+} */
+
+
+.photoinput {
+    width: 100px;
+    height: 40px;
+    background-color: #FF914D;
+    border-radius: 5px;
+    font-size: smaller;
+}
+
+.elementList {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: stretch;
+    width:80%;
+    gap:15px;
+    height: 40px;
+    margin: 10px 0;
+}
+
+.elementList>div, .elementListItem {
+    background-color: #ff6c1a;
+    border-radius: 5px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.orderList {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0;
+    gap: 25px;
+    width: 80%;
+}
+
+.orderList>div {
+    display: grid;
+    grid-template-columns: 25% 75%;
+    width:100%;
+    align-items: center;
+    font-size: large;
+    text-align: start;
+}
+
+.tempPlace {
+    background-color: #FF914D;
+    opacity: 0.4;
+    width: 100%;
+    height: 50px;
+    border-radius: 5px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.realPlace {
+    background-color: #ff6c1a;
+    width:100%;
+    height: 50px;
+    border-radius: 5px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.binaryInput {
+    width: 80%;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 1fr 1fr 1fr;
+}
+
+.binaryInput>div, .result>div{
+    background-color: #FF914D;
+    border-radius: 5px;
+    font-size: larger;
+    padding: 10px;
+    word-break: keep-all;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loadingCircle{
+    width: 300px;
+    height: 300px;
+}
+
+.result {
+    width: 80%;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: repeat(80px);
+    gap:25px;
+    margin: 20px 0;
+    font-size: larger;
+}

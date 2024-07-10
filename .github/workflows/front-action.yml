@@ -1,0 +1,50 @@
+name: CI/CD_front
+
+on:
+  push:
+    branches:
+      - seungJoo
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  CI-CD :
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: seungJoo
+      
+      - name: Docker Build & push to prod
+        run: |
+          cd Frontend
+          echo "VITE_API_URL=" ${{ secrets.VITE_API_URL }} >> .env
+          echo "VITE_API_URL=" ${{ secrets.VITE_APP_NAME }} >> .env
+          echo "VITE_NAVER_MAP_CLIENT_KEY=" ${{ secrets.VITE_NAVER_CLIENT_KEY }} >> .env
+          echo "VITE_NAVER_MAP_CLIENT_KEY=" ${{ secrets.VITE_NAVER_MAP_CLIENT_KEY }} >> .env
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/nginx-prod:${GITHUB_SHA::7} .
+          docker push ${{ secrets.DOCKER_USERNAME }}/nginx-prod:${GITHUB_SHA::7}
+          
+      - name: Deploy to prod
+        uses: appleboy/ssh-action@master
+        id: deploy-prod
+        with:
+          host: ${{ secrets.HOST_PROD }}
+          username: dh5277
+          key: ${{ secrets.PRIVATE_KEY }}
+          envs: GITHUB_SHA
+          script: |
+            SHORT_SHA=${GITHUB_SHA:0:7}
+            cd capstone
+            git checkout main
+            docker ps
+            docker pull ${{ secrets.DOCKER_USERNAME }}/nginx-prod:$SHORT_SHA
+            docker stop nginx
+            docker rm nginx
+            docker run -d --name nginx --network nginx_network -p 80:80 -p 443:443 -v ~/nginx_data/conf:/etc/nginx/conf.d -v ~/nginx_data/certs:/etc/nginx/certs -v ~/flask/flask/static/output:/var/www/images ${{ secrets.DOCKER_USERNAME }}/nginx-prod:$SHORT_SHA
+            docker image prune -af

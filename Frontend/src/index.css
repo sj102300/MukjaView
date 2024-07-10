@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: 'NanumSquareRound','NanumSquare',  'Jalnan2';
+  /* -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif; */
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+}
+
+@font-face {
+  font-family: 'Jalnan2';
+  src: url('./assets/fonts/Jalnan2.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'NanumSquare';
+  font-weight: 300;
+  src: url('./assets/fonts/NanumSquareL.woff') format('woff'),
+  url('./assets/fonts/NanumSquareOTF_acL.woff') format('woff')
+}
+
+@font-face {
+  font-family: 'NanumSquare';
+  font-weight: 500;
+  src: url('./assets/fonts/NanumSquareR.woff') format('woff'),
+  url('./assets/fonts/NanumSquareOTF_acR.woff') format('woff')
+}
+
+
+@font-face {
+  font-family: 'NanumSquare';
+  font-weight: 700;
+  src: url('./assets/fonts/NanumSquareB.woff') format('woff'),
+  url('./assets/fonts/NanumSquareOTF_acB.woff') format('woff')
+}
+
+@font-face {
+  font-family: 'NanumSquare';
+  font-weight: 800;
+  src: url('./assets/fonts/NanumSquareEB.woff') format('woff'),
+  url('./assets/fonts/NanumSquareOTF_acEB.woff') format('woff')
+}
+
+
+@font-face {
+  font-family: 'NanumSquareRound';
+  font-weight: 300;
+  src: url('./assets/fonts/NanumSquareRoundOTFL.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'NanumSquareRound';
+  font-weight: 500;
+  src: url('./assets/fonts/NanumSquareRoundOTFR.woff') format('woff');
+}
+@font-face {
+  font-family: 'NanumSquareRound';
+  font-weight: 700;
+  src: url('./assets/fonts/NanumSquareRoundOTFB.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'NanumSquareRound';
+  font-weight: 800;
+  src: url('./assets/fonts/NanumSquareRoundOTFEB.woff') format('woff');
+}
